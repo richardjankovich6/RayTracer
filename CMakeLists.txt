@@ -8,7 +8,7 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 
 # Add your source files to executable target
 file(GLOB MAIN
-    "main.cpp"
-    "utils.h"
+    "src/main.cpp"
+    "src/utils.h"
     )
 add_executable(RayTracer ${MAIN})
