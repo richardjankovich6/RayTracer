@@ -11,6 +11,7 @@
 #include "color.h"
 #include "point.h"
 #include "ray.h"
+#include "sphere.h"
 
 
 
@@ -44,28 +45,18 @@ Vector3<> lightColor = { 1., 1., 1. };
 Vector3<> ambientLight = { .0f, .0f, .0f };
 Vector3<> backgroundColor = { .2f, .2f, .2f };
 
-struct Sphere {
-    Vector3<> center;
-    float radius;
-    float kd;
-    float ks;
-    float ka;
-    Vector3<> od;
-    Vector3<> os;
-    float kgls;
-};
 Sphere purpleSphere;
 
 int main() {
 
     purpleSphere.center = { .0, .0, .0 };
     purpleSphere.radius = 0.4f;
-    purpleSphere.kd = 0.7f;
-    purpleSphere.ks = 0.2f;
-    purpleSphere.ka = 0.1f;
-    purpleSphere.od = { 1., .0, 1. };
-    purpleSphere.os = { 1., 1., 1. };
-    purpleSphere.kgls = 16.0f;
+    purpleSphere.kDiffuse = 0.7f;
+    purpleSphere.kSpecular = 0.2f;
+    purpleSphere.kAmbient = 0.1f;
+    purpleSphere.DiffuseColor = { 1., .0, 1. };
+    purpleSphere.SpecularColor = { 1., 1., 1. };
+    purpleSphere.kGloss = 16.0f;
 
     stringstream pic;
 
@@ -74,7 +65,7 @@ int main() {
 
     pic << "P3\n" << width << " " << height << "\n255\n";
 
-    color c;
+    Color c;
 
     for (int h = 0; h < height; h++) {
         for (int w = 0; w < width; w++) {
