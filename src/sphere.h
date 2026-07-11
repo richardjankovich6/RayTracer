@@ -1,10 +1,11 @@
 #pragma once
 
+#include "primitive.h"
 #include "ray.h"
 #include "vector3.h"
 #include "color.h"
 
-class Sphere {
+class Sphere : Primitive {
 
     Vector3<double> center;
     double radius;
@@ -38,7 +39,7 @@ public:
     Color PhongShading();
 
     void intersetRay(Ray ray) {
-        
+
     }
 
 
