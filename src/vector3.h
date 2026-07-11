@@ -1,7 +1,7 @@
 #pragma once
 //#include "glm/glm.hpp"
-#ifndef VEC3_H
-#define VEC3_H
+#ifndef VECTOR3_H
+#define VECTOR3_H
 //#include "glm/glm.hpp"
 
 #include <cmath>
@@ -50,7 +50,7 @@ public:
 	}
 };
 
-using point3 = Vector3<double>;
+// using point3 = Vector3<double>;
 
 
 // inline std::ostream& operator <<(std::ostream& out, const Vector3<int>& v) {
@@ -68,8 +68,8 @@ using point3 = Vector3<double>;
 
 template<typename T>
 std::ostream& operator<<(std::ostream& out, const Vector3<T>& v) {
-    return out << "(" << v.vec[0] << ", " << v.vec[1] << ", " << v.vec[2] << ")";
-    // return out << "(" << v.x << ", " << v.y << ", " << v.z << ")";
+    // return out << "(" << v.vec[0] << ", " << v.vec[1] << ", " << v.vec[2] << ")";
+    return out << "(" << v.x() << ", " << v.y() << ", " << v.z() << ")";
 }
 
 
