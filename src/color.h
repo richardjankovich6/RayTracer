@@ -6,7 +6,8 @@
 
 using color = Vector3<int>;
 inline std::ostream& operator<<(std::ostream& out, const color& v) {
-    return out << v.vec[0] << ", " << v.vec[1] << ", " << v.vec[2] << "  ";
+    // return out << v.vec[0] << ", " << v.vec[1] << ", " << v.vec[2] << "  ";
+    return out << v.x() << ", " << v.y() << ", " << v.z() << "  ";
 }
 
 // TODO: remove test function
@@ -20,5 +21,5 @@ color getColorDontUse(int w, int h) {
     int ig = static_cast<int>(255.999 * g);
     int ib = static_cast<int>(255.999 * b);
 
-    return Vector3<int>(ir, ig, ib);
+    return color(ir, ig, ib);
 }
