@@ -1,8 +1,7 @@
 #pragma once
-//#include "glm/glm.hpp"
+
 #ifndef VECTOR3_H
 #define VECTOR3_H
-//#include "glm/glm.hpp"
 
 #include <cmath>
 #include <iostream>
