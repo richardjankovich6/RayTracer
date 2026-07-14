@@ -5,6 +5,11 @@
 #include "vector3.h"
 #include "color.h"
 
+
+#ifndef SPHERE_H
+#define SPHERE_H
+
+
 class Sphere : public Primitive {
 
 private:
@@ -28,7 +33,13 @@ public:
     Sphere(Vector3<double> Icenter, double Iradius, double IkDiffuse, double IkSpecular, double IkAmbient, double IkGloss, Color IdiffuseColor, Color IspecularColor, Color IambientColor) {
         center = Icenter;
         radius = Iradius;
-        Primitive(IkDiffuse, IkSpecular, IkAmbient, IkGloss, IdiffuseColor, IspecularColor, IambientColor);
+        kDiffuse = IkDiffuse;
+        kSpecular = IkSpecular;
+        kGloss = IkGloss;
+        diffuseColor = IdiffuseColor;
+        specularColor = IspecularColor;
+        ambientColor = IambientColor;
+        // Primitive(IkDiffuse, IkSpecular, IkAmbient, IkGloss, IdiffuseColor, IspecularColor, IambientColor);
     }
 
     // Sphere(Vector3<double> center, double radius)
@@ -56,3 +67,5 @@ public:
     }
 
 };
+
+#endif

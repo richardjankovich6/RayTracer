@@ -6,6 +6,9 @@
 
 // class Ray;
 
+#ifndef PRIMITIVE_H
+#define PRIMITIVE_H
+
 class Primitive {
 
 protected:
@@ -25,6 +28,7 @@ public:
     : kDiffuse(kDiffuse), kSpecular(kSpecular), kAmbient(kAmbient), kGloss(kGloss), diffuseColor(diffuseColor), specularColor(specularColor), ambientColor(ambientColor) {}
     
     Primitive() {};
+    virtual ~Primitive() = default;
 
     Color phongShading(Vector3<double> normal, Vector3<double> lookDirection) {
         return Color();
@@ -51,5 +55,7 @@ public:
     inline Color getAmbientColor() const {return ambientColor;}
     inline void setAmbientColor(Color const val) {ambientColor = val;}
 
-    virtual Vector3<double> intersetRay(Ray ray) const;
+    virtual Vector3<double> intersetRay(Ray ray) const = 0;
 };
+
+#endif
