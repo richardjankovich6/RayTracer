@@ -3,34 +3,19 @@
 #include <iostream>
 #include <fstream>
 #include<sstream>
-#include <cmath>
+// #include <cmath>
 
 #include "globals.h"
-
 #include "vector3.h"
 #include "color.h"
-#include "point.h"
-#include "ray.h"
+// #include "point.h"
+// #include "ray.h"
 #include "sphere.h"
-
-
-
-// int main() {
-//     // Engine::Vector3 vec = Engine::Vector3();
-//     // std::cout << vec << std::endl;
-
-//     Vector3 vec = Vector3<int>();
-
-//     std::cout << vec << std::endl;
-
-//     return 0;
-// }
 
 using namespace std;
 
 // void perspClip(int fovw, int fovh, double near, double far);
 
-// void castRay();
 
 int maxDepth = 2;
 
@@ -46,14 +31,14 @@ int main() {
 
     Sphere purpleSphere;
 
-    // purpleSphere.setCenter({ .0, .0, .0 });
-    // purpleSphere.setRadius(0.4);
-    // purpleSphere.setKDiffiuse(0.4);
-    // purpleSphere.setKSpecular(0.7);
-    // purpleSphere.setKAmbient(0.1);
-    // purpleSphere.setDiffiuseColor({255, 0, 255});
-    // purpleSphere.setSpecularColor({255, 255, 255});
-    // purpleSphere.setKGloss(16.0);
+    purpleSphere.setCenter({ .0, .0, .0 });
+    purpleSphere.setRadius(0.4);
+    purpleSphere.setKDiffiuse(0.4);
+    purpleSphere.setKSpecular(0.7);
+    purpleSphere.setKAmbient(0.1);
+    purpleSphere.setDiffiuseColor({255, 0, 255});
+    purpleSphere.setSpecularColor({255, 255, 255});
+    purpleSphere.setKGloss(16.0);
 
     stringstream pic;
 
@@ -77,9 +62,7 @@ int main() {
 
     ofstream file("image.ppm");
     file << pic.str();
-
-    // purpleSphere;
-
+    
     return 0;
 }
 
