@@ -5,7 +5,7 @@
 #include "vector3.h"
 #include "color.h"
 
-class Sphere : Primitive {
+class Sphere : public Primitive {
 
     Vector3<double> center;
     double radius;
