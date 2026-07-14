@@ -3,6 +3,9 @@
 #include "vector3.h"
 #include "color.h"
 
+#ifndef LIGHT_H
+#define LIGHT_H
+
 class Light {
 
     Color lightColor;
@@ -27,3 +30,5 @@ public:
     Vector3<double> getDirectionToLight() { return directionToLight; }
 
 };
+
+#endif

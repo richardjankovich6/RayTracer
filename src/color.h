@@ -4,6 +4,10 @@
 #include "vector3.h"
 #include "globals.h"
 
+#ifndef COLOR_H
+#define COLOR_H
+
+
 using Color = Vector3<int>;
 inline std::ostream& operator<<(std::ostream& out, const Color& v) {
     // return out << v.vec[0] << ", " << v.vec[1] << ", " << v.vec[2] << "  ";
@@ -23,3 +27,5 @@ Color getColorDontUse(int w, int h) {
 
     return Color(ir, ig, ib);
 }
+
+#endif

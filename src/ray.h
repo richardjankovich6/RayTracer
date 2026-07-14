@@ -3,6 +3,8 @@
 #include "vector3.h"
 #include "point.h"
 
+#ifndef RAY_H
+#define RAY_H
 
 class Ray {
 public:
@@ -20,3 +22,6 @@ private:
 Ray castRay(const Point& origin, const Vector3<>& direction) {
     return Ray(origin, direction);
 }
+
+
+#endif

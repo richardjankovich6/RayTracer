@@ -2,10 +2,15 @@
 
 #include "primitive.h"
 
-class Triangle : Primitive {
+#ifndef TRIANGLE_H
+#define TRIANGLE_H
+
+class Triangle : public Primitive {
     
 
 public:
 
     Triangle() {};
 };
+
+#endif
