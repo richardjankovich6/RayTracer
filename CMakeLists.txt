@@ -10,6 +10,14 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 file(GLOB MAIN
     "src/main.cpp"
     "src/vector3.h"
+    "src/color.h"
+    "src/globals.h"
+    "src/light.h"
+    "src/point.h"
+    "src/ray.h"
+    "src/triangle.h"
+    # "src/triangle.h"
+    # "src/triangle.h"
     # "src/utils.h"
     )
 add_executable(RayTracer ${MAIN})

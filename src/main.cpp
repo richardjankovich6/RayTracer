@@ -44,7 +44,7 @@ int maxDepth = 2;
 
 int main() {
 
-    Sphere purpleSphere = Sphere();
+    Sphere purpleSphere;
 
     // purpleSphere.setCenter({ .0, .0, .0 });
     // purpleSphere.setRadius(0.4);

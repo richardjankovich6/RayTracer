@@ -2,9 +2,9 @@
 
 #include "color.h"
 #include "vector3.h"
+#include "ray.h"
 
-class Ray;
-
+// class Ray;
 
 class Primitive {
 
@@ -20,6 +20,7 @@ protected:
     Color ambientColor;
 
 public:
+
     Primitive(double kDiffuse, double kSpecular, double kAmbient, double kGloss, Color diffuseColor, Color specularColor, Color ambientColor)
     : kDiffuse(kDiffuse), kSpecular(kSpecular), kAmbient(kAmbient), kGloss(kGloss), diffuseColor(diffuseColor), specularColor(specularColor), ambientColor(ambientColor) {}
     

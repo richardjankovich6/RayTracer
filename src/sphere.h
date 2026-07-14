@@ -7,15 +7,32 @@
 
 class Sphere : public Primitive {
 
+private:
+
     Vector3<double> center;
     double radius;
 
 public:
 
-    Sphere() {};
+    Sphere() : Primitive() {};
 
-    Sphere(Vector3<double> center, double radius)
-    : center(center), radius(radius) {}
+    Sphere(Vector3<double> center, double radius) : center(center), radius(radius), Primitive() {
+        // Primitive::Primitive();
+    }
+
+    // Sphere(Vector3<double> center, double radius, double kDiffuse, double kSpecular, double kAmbient, double kGloss, Color diffuseColor, Color specularColor, Color ambientColor)
+    // : center(center), radius(radius), Primitive(kDiffuse, kSpecular, kAmbient, kGloss, diffuseColor, specularColor, ambientColor) {
+    //     // Primitive(kDiffuse, kSpecular, kAmbient, kGloss, diffuseColor, specularColor, ambientColor);
+    // }
+
+    Sphere(Vector3<double> Icenter, double Iradius, double IkDiffuse, double IkSpecular, double IkAmbient, double IkGloss, Color IdiffuseColor, Color IspecularColor, Color IambientColor) {
+        center = Icenter;
+        radius = Iradius;
+        Primitive(IkDiffuse, IkSpecular, IkAmbient, IkGloss, IdiffuseColor, IspecularColor, IambientColor);
+    }
+
+    // Sphere(Vector3<double> center, double radius)
+    // : center(center), radius(radius) {}
     // Sphere(Vector3<> center, double radius, double kd, double ks, double ka,
     // Vector3<> od, Vector3<> os, double kgls) : center(center),
     // radius(radius), kDiffuse(kd), kSpecular(ks), kAmbient(ka),
@@ -34,9 +51,8 @@ public:
     double getRadius() const { return radius; }
     void setRadius(double const val) { radius = val; }
 
-    void intersetRay(Ray ray) {
-
+    virtual Vector3<double> intersetRay(Ray ray) const override {
+        return Vector3<double>();
     }
-
 
 };
