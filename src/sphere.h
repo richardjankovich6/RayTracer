@@ -62,8 +62,29 @@ public:
     double getRadius() const { return radius; }
     void setRadius(double const val) { radius = val; }
 
-    virtual Vector3<double> intersetRay(Ray ray) const override {
-        return Vector3<double>();
+    virtual bool intersetRay(Vector3<double>& v, Ray ray) const override {
+
+        Vector3 positionDifference = center - ray.origin();
+
+        bool bInside = positionDifference.length() < radius;
+
+        double tca = dot(ray.direction(), positionDifference);
+
+        if (!bInside && (tca < 0)) {
+            return false;
+        }
+
+        double thcSquare = pow(radius, 2) - positionDifference.lengthSquared() + pow(tca, 2);
+
+        if (thcSquare < 0) {
+            return false;
+        }
+
+        double t = tca;
+        t += bInside ? sqrt(thcSquare) : -sqrt(thcSquare);
+
+        v = ray.origin() + ray.direction() * t;
+        return true;
     }
 
 };
