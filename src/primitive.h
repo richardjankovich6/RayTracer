@@ -42,10 +42,10 @@ public:
         double dotProduct = dot(normal, light.getDirectionToLight());
         Color dColor = kDiffuse * light.getLightColor() * diffuseColor * fmax(0.0, dotProduct);
 
-        Vector3<> reflectVector = 2 * normal * light.getDirectionToLight();
-        reflectVector = reflectVector / ( 2 * normal * dotProduct - light.getDirectionToLight());
+        Vector3 reflectVector = 2 * normal * light.getDirectionToLight();
+        // reflectVector = reflectVector / ( 2 * normal * dotProduct - light.getDirectionToLight());
+        // reflectVector = 1.0 / ( 2 * normal * dotProduct - light.getDirectionToLight());
         reflectVector = unitVec(reflectVector);
-
         Color sColor = kSpecular * light.getLightColor() * specularColor * pow(fmax(0.0, dot(lookDirection, reflectVector)), kGloss);
 
         Color finalColor = aColor + sColor + dColor;
