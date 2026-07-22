@@ -91,11 +91,34 @@ inline Vector3<> operator*(const Vector3<>& u, const Vector3<>& v) {
 	return Vector3<>(u.vec[0] * v.vec[0], u.vec[1] * v.vec[1], u.vec[2] * v.vec[2]);
 };
 
+template<typename A, typename B>
+inline Vector3<A> operator*(const Vector3<A>& u, const Vector3<B>& v) {
+	return Vector3<A>(u.vec[0] * v.vec[0], u.vec[1] * v.vec[1], u.vec[2] * v.vec[2]);
+};
+
 inline Vector3<> operator*(double t, const Vector3<>& v) {
 	return Vector3<>(t * v.vec[0], t * v.vec[1], t * v.vec[2]);
 };
 
 inline Vector3<> operator*(const Vector3<>& v, double t) {
+	return t * v;
+};
+
+inline Vector3<int> operator*(double t, const Vector3<int>& v) {
+	return Vector3<int>(t * v.vec[0], t * v.vec[1], t * v.vec[2]);
+};
+
+inline Vector3<int> operator*(const Vector3<int>& v, double t) {
+	return t * v;
+};
+
+template<typename A, typename B>
+inline Vector3<A> operator*(B t, const Vector3<A>& v) {
+	return Vector3<A>(t * v.vec[0], t * v.vec[1], t * v.vec[2]);
+};
+
+template<typename A, typename B>
+inline Vector3<A> operator*(const Vector3<A>& v, B t) {
 	return t * v;
 };
 
