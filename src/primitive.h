@@ -1,8 +1,11 @@
 #pragma once
 
 #include "color.h"
+#include "light.h"
 #include "vector3.h"
 #include "ray.h"
+#include <algorithm>
+#include <cmath>
 
 // class Ray;
 
@@ -22,15 +25,30 @@ protected:
     Color specularColor;
     Color ambientColor;
 
+    Light light;
+
 public:
 
-    Primitive(double kDiffuse, double kSpecular, double kAmbient, double kGloss, Color diffuseColor, Color specularColor, Color ambientColor)
-    : kDiffuse(kDiffuse), kSpecular(kSpecular), kAmbient(kAmbient), kGloss(kGloss), diffuseColor(diffuseColor), specularColor(specularColor), ambientColor(ambientColor) {}
+    Primitive(double kDiffuse, double kSpecular, double kAmbient, double kGloss, Color diffuseColor, Color specularColor, Color ambientColor, Light light)
+    : kDiffuse(kDiffuse), kSpecular(kSpecular), kAmbient(kAmbient), kGloss(kGloss), diffuseColor(diffuseColor), specularColor(specularColor), ambientColor(ambientColor), light(light) {}
     
     Primitive() {};
     virtual ~Primitive() = default;
 
     Color phongShading(Vector3<double> normal, Vector3<double> lookDirection) {
+        
+
+        Color aColor = light.getAmbientLight() * kAmbient * diffuseColor;
+
+        double dotProduct = dot(normal, light.getDirectionToLight());
+        Color dColor = kDiffuse * light.getLightColor() * diffuseColor * fmax(0.0, dotProduct);
+
+        Vector3<> reflectVector = 2 * normal * light.getDirectionToLight();
+
+        reflectVector /= 2 * normal * dotProduct - light.getDirectionToLight();
+
+
+
         return Color();
     }
 
