@@ -40,7 +40,7 @@ public:
     height(height), fovWidth(fovWidth), fovHeight(fovHeight) {
 
         xExtent = fabs(tan(fovWidth / 2) * (lookAt - lookFrom).length());
-        yExtent = fabs(tan(fovHeight / 2) * (lookAt - lookFrom).length() / (width / height));
+        yExtent = fabs(tan(fovHeight / 2) * (lookAt - lookFrom).length() / ((float)width / height));
 
         hpx = xExtent / width;
         hpy = yExtent / height;
