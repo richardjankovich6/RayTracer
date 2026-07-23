@@ -39,8 +39,14 @@ public:
     : lookAt(lookAt), lookFrom(lookFrom), lookUp(lookUp), width(width),
     height(height), fovWidth(fovWidth), fovHeight(fovHeight) {
 
-        xExtent = fabs(tan(fovWidth / 2) * (lookAt - lookFrom).length());
-        yExtent = fabs(tan(fovHeight / 2) * (lookAt - lookFrom).length() / ((float)width / height));
+        // convert to radians
+        double fw = fovWidth * M_PI / 180.0;
+        double fh = fovHeight * M_PI / 180.0;
+        // xExtent = fabs(tan(fw / 2) * (lookAt - lookFrom).length());
+        xExtent = std::abs(tan(fw / 2) * (lookAt - lookFrom).length());
+        // yExtent = fabs(tan(fh / 2) * (lookAt - lookFrom).length() / ((float)width / (float)height));
+        // yExtent = fabs(tan(fh / 2) * (lookAt - lookFrom).length() * static_cast<double>(height) / static_cast<double>(width));
+        yExtent = std::abs(tan(fh / 2) * (lookAt - lookFrom).length() * static_cast<double>(height) / static_cast<double>(width));
 
         hpx = xExtent / width;
         hpy = yExtent / height;
@@ -53,8 +59,8 @@ public:
 
     Ray makeRay(int w, int h) {
 
-        double x = xExtent + hpx * (w + 0.5);
-        double y = yExtent + hpy * (h + 0.5);
+        double x = xExtent + hpx * (static_cast<double>(w) + 0.5);
+        double y = yExtent + hpy * (static_cast<double>(h) + 0.5);
 
         Vector3<double> direction = Vector3<double>(x, y, lookAt.z()) - lookFrom;
 
