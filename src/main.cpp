@@ -32,13 +32,13 @@ int maxDepth = 2;
 int main() {
 
     // create camera
-    Point lookAt = Point(0.0, 0.0, 0.0);
-    Point lookFrom = Point(0.0, 0.0, -5.0);
-    Vector3<double> lookUp = Vector3<double>(0.0, 1.0, 0.0);
+    Point lookAt = Point(1.0, 0.0, 0.0);
+    Point lookFrom = Point(0.0, 0.0, 0.0);
+    Vector3<double> lookUp = Vector3<double>(0.0, 0.0, 1.0);
     int width = 800;
     int height = 800;
-    double fovWidth = 90.0;
-    double fovHeight = 90.0;
+    double fovWidth = 120.0;
+    double fovHeight = 120.0;
     Camera camera = Camera(lookAt, lookFrom, lookUp, width, height, fovWidth, fovHeight);
 
     // create light
@@ -52,14 +52,14 @@ int main() {
     // create a purple sphere
     Sphere purpleSphere;
 
-    purpleSphere.setCenter({ 0.0, 0.0, 0.0 });
-    purpleSphere.setRadius(30);
-    purpleSphere.setKDiffiuse(0.4);
-    purpleSphere.setKSpecular(0.7);
+    purpleSphere.setCenter(Vector3( 2.0, 2.0, 0.0));
+    purpleSphere.setRadius(0.3);
+    purpleSphere.setKDiffiuse(0.6);
+    purpleSphere.setKSpecular(0.2);
     purpleSphere.setKAmbient(0.1);
     purpleSphere.setDiffiuseColor({255, 0, 255});
-    purpleSphere.setSpecularColor({255, 255, 255});
-    purpleSphere.setKGloss(16.0);
+    purpleSphere.setSpecularColor({155, 155, 155});
+    purpleSphere.setKGloss(2.0);
     purpleSphere.setLight(light);
 
     stringstream pic;
@@ -86,8 +86,6 @@ int main() {
             else {
                 c = light.getBackgroundColor();
             }
-            
-            // c = getColorDontUse(w, h);
             pic << c;
         }
         pic << '\n';
