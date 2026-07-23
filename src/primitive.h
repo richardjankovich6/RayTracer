@@ -73,6 +73,8 @@ public:
     inline Color getAmbientColor() const {return ambientColor;}
     inline void setAmbientColor(Color const val) {ambientColor = val;}
 
+    inline void setLight(const Light l) { light = l; }
+
     virtual bool intersetRay(Vector3<double>& v, Ray ray) const = 0;
 
     // virtual Vector3<double> intersetRay(Ray ray) const = 0;
