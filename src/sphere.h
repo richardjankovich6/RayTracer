@@ -2,6 +2,7 @@
 
 #include "primitive.h"
 #include "ray.h"
+#include "point.h"
 #include "vector3.h"
 #include "color.h"
 
@@ -62,7 +63,7 @@ public:
     double getRadius() const { return radius; }
     void setRadius(double const val) { radius = val; }
 
-    virtual bool intersetRay(Vector3<double>& v, Ray ray) const override {
+    virtual bool intersetRay(Point& p, Ray ray) const override {
 
         Vector3 positionDifference = center - ray.origin();
 
@@ -71,20 +72,30 @@ public:
         double tca = dot(ray.direction(), positionDifference);
 
         if (!bInside && (tca < 0)) {
+            // std::cout << "inside or tca fail";
             return false;
         }
 
-        double thcSquare = pow(radius, 2) - positionDifference.lengthSquared() + pow(tca, 2);
+        // double thcSquare = pow(radius, 2) - positionDifference.lengthSquared() + pow(tca, 2);
+        // double thcSquare = pow(radius, 2) - positionDifference.length() + pow(tca, 2);
+        double thcSquare = pow(radius, 2) - dot(positionDifference, positionDifference) + pow(tca, 2);
 
         if (thcSquare < 0) {
+            // std::cout << "thc fail";
             return false;
         }
+        std::cout << "thc succeed";
 
         double t = tca;
         t += bInside ? sqrt(thcSquare) : -sqrt(thcSquare);
 
-        v = ray.origin() + ray.direction() * t;
+        p = ray.origin() + ray.direction() * t;
         return true;
+    }
+
+    Color getColor(Point p, Vector3<double> v) {
+        Vector3 normal = (p - center) / radius;
+        return phongShading(normal, v);
     }
 
 };
