@@ -12,6 +12,8 @@
 // #include "ray.h"
 #include "sphere.h"
 
+#include "camera.h"
+
 using namespace std;
 
 // void perspClip(int fovw, int fovh, double near, double far);
@@ -29,6 +31,25 @@ int maxDepth = 2;
 
 int main() {
 
+    // create camera
+    Point lookAt = Point(0.0, 0.0, 0.0);
+    Point lookFrom = Point(0.0, 0.0, 1.0);
+    Vector3<double> lookUp = Vector3<double>(0.0, 1.0, 0.0);
+    int width = 800;
+    int height = 800;
+    double fovWidth = 90.0;
+    double fovHeight = 90.0;
+    Camera camera = Camera(lookAt, lookFrom, lookUp, width, height, fovWidth, fovHeight);
+
+    // create light
+    Vector3<double> directionToLight = Vector3<double>(1.0, 1.0, 1.0);
+    Color lightColor = Color(255, 255, 255);
+    Color ambientLightColor = Color(25, 25, 25);
+    Color backgroundColor = Color(10, 10, 10);
+    Light light = Light(lightColor, directionToLight, ambientLightColor, backgroundColor);
+
+
+    // create a purple sphere
     Sphere purpleSphere;
 
     purpleSphere.setCenter({ .0, .0, .0 });
