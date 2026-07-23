@@ -65,30 +65,50 @@ public:
 
     virtual bool intersetRay(Point& p, Ray ray) const override {
 
-        Vector3 positionDifference = center - ray.origin();
+        // Vector3 positionDifference = center - ray.origin();
+        Vector3 oc = center - ray.origin();
+        // Vector3 oc = ray.origin() - center;
 
-        bool bInside = positionDifference.length() < radius;
+        bool bInside = oc.length() < radius;
 
-        double tca = dot(ray.direction(), positionDifference);
+        // double tca = dot(ray.direction(), oc);
+        double tca = dot(oc, ray.direction());
 
         if (!bInside && (tca < 0)) {
+            // ray points away from sphere
             // std::cout << "inside or tca fail";
             return false;
         }
 
-        // double thcSquare = pow(radius, 2) - positionDifference.lengthSquared() + pow(tca, 2);
-        // double thcSquare = pow(radius, 2) - positionDifference.length() + pow(tca, 2);
-        double thcSquare = pow(radius, 2) - dot(positionDifference, positionDifference) + pow(tca, 2);
+        // double d2 = oc.lengthSquared() - tca * tca;
+        // if (d2 > radius * radius) {
+        //     return false; 
+        // }
+        // double thc = sqrt(radius * radius - d2);
 
+        // double t0 = tca - thc;
+        // double t1 = tca + thc;
+        // if (t0 > t1) {
+        //     std::swap(t0, t1);
+        // }
+
+        // if (t0 < 0) {
+        //     t0 = t1;
+        //     if (t0 < 0) {
+        //         return false;
+        //     }
+        // }
+        // double t = t0;
+        // p = ray.origin() + ray.direction() * t;
+        // return true;
+
+        double thcSquare = pow(radius, 2) - oc.lengthSquared() + pow(tca, 2);
         if (thcSquare < 0) {
-            // std::cout << "thc fail";
             return false;
         }
-        std::cout << "thc succeed";
 
         double t = tca;
         t += bInside ? sqrt(thcSquare) : -sqrt(thcSquare);
-
         p = ray.origin() + ray.direction() * t;
         return true;
     }

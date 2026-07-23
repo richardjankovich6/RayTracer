@@ -33,7 +33,7 @@ int main() {
 
     // create camera
     Point lookAt = Point(0.0, 0.0, 0.0);
-    Point lookFrom = Point(0.0, 0.0, 1.0);
+    Point lookFrom = Point(0.0, 0.0, -5.0);
     Vector3<double> lookUp = Vector3<double>(0.0, 1.0, 0.0);
     int width = 800;
     int height = 800;
@@ -52,8 +52,8 @@ int main() {
     // create a purple sphere
     Sphere purpleSphere;
 
-    purpleSphere.setCenter({ 0.45, .0, -0.15 });
-    purpleSphere.setRadius(0.1);
+    purpleSphere.setCenter({ 0.0, 0.0, 0.0 });
+    purpleSphere.setRadius(30);
     purpleSphere.setKDiffiuse(0.4);
     purpleSphere.setKSpecular(0.7);
     purpleSphere.setKAmbient(0.1);
