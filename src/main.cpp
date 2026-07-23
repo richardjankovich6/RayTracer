@@ -5,11 +5,11 @@
 #include<sstream>
 // #include <cmath>
 
-#include "globals.h"
+// #include "globals.h"
 #include "vector3.h"
 #include "color.h"
-// #include "point.h"
-// #include "ray.h"
+#include "point.h"
+#include "ray.h"
 #include "sphere.h"
 
 #include "camera.h"
@@ -52,14 +52,15 @@ int main() {
     // create a purple sphere
     Sphere purpleSphere;
 
-    purpleSphere.setCenter({ .0, .0, .0 });
-    purpleSphere.setRadius(0.4);
+    purpleSphere.setCenter({ 0.45, .0, -0.15 });
+    purpleSphere.setRadius(0.1);
     purpleSphere.setKDiffiuse(0.4);
     purpleSphere.setKSpecular(0.7);
     purpleSphere.setKAmbient(0.1);
     purpleSphere.setDiffiuseColor({255, 0, 255});
     purpleSphere.setSpecularColor({255, 255, 255});
     purpleSphere.setKGloss(16.0);
+    purpleSphere.setLight(light);
 
     stringstream pic;
 
@@ -68,11 +69,25 @@ int main() {
 
     pic << "P3\n" << width << " " << height << "\n255\n";
 
+    // Vector3<double> lookDirection = unitVec(lookAt - lookFrom);
+    Vector3<double> lookDirection = unitVec(lookFrom - lookAt);
     Color c;
+    Ray r;
+    Point p;
 
     for (int h = 0; h < height; h++) {
         for (int w = 0; w < width; w++) {
-            c = getColorDontUse(w, h);
+            r = camera.makeRay(w, h);
+
+            if (purpleSphere.intersetRay(p, r)) {
+                c = purpleSphere.getColor(p, lookDirection);
+
+            }
+            else {
+                c = light.getBackgroundColor();
+            }
+            
+            // c = getColorDontUse(w, h);
             pic << c;
         }
         pic << '\n';
