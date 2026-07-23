@@ -45,7 +45,7 @@ public:
 	}
 
 	double length() const {
-		return std::sqrt(lengthSquared());
+		return sqrt(lengthSquared());
 	}
 };
 
