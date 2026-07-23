@@ -16,9 +16,9 @@ public:
 	Vector3() : vec{ 0,0,0 } {};
 	Vector3(ntype e0, ntype e1, ntype e2) : vec{e0, e1, e2} {}
 
-	ntype x() const { return vec[0]; }
-	ntype y() const { return vec[1]; }
-	ntype z() const { return vec[2]; }
+	inline ntype x() const { return vec[0]; }
+	inline ntype y() const { return vec[1]; }
+	inline ntype z() const { return vec[2]; }
 
 	Vector3 operator-() const { return Vector3(-vec[0], -vec[1], -vec[2]); }
 	ntype operator[](int i) const { return vec[i]; }
