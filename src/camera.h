@@ -35,19 +35,15 @@ public:
     Camera() {};
 
     Camera(Point lookAt, Point lookFrom, Vector3<double> lookUp, int width,
-    int height, double fovWidth, double fovHeight, double xExtent,
-    double yExtent, double hpx, double hpy)
+    int height, double fovWidth, double fovHeight)
     : lookAt(lookAt), lookFrom(lookFrom), lookUp(lookUp), width(width),
-    height(height), fovWidth(fovWidth), fovHeight(fovHeight),
-    xExtent(xExtent), yExtent(yExtent), hpx(hpx), hpy(hpy) {
-
+    height(height), fovWidth(fovWidth), fovHeight(fovHeight) {
 
         xExtent = fabs(tan(fovWidth / 2) * (lookAt - lookFrom).length());
         yExtent = fabs(tan(fovHeight / 2) * (lookAt - lookFrom).length() / (width / height));
 
         hpx = xExtent / width;
         hpy = yExtent / height;
-
     }
     
     Camera(const Camera &) = default;
