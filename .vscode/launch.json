@@ -1,0 +1,39 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Launch",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceRoot}/build/RayTracer",
+            "args": [],
+            "cwd": "${workspaceRoot}"
+        },
+        {
+            "name": "build and run RayTracer (debug)",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceRoot}/build/RayTracer",
+            "MIMode": "gdb",
+            "miDebuggerPath": "/usr/bin/gdb",
+            "stopAtEntry": true,
+            "args": [],
+            "externalConsole": false,
+            "cwd": "${workspaceRoot}",
+
+            "preLaunchTask": "Build RayTracer",
+            "internalConsoleOptions": "openOnSessionStart"
+        },
+        {
+            "name": "build and run RayTracer",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceRoot}/build/RayTracer",
+            "args": [],
+            "cwd": "${workspaceRoot}"
+        }
+    ]
+}
