@@ -37,15 +37,14 @@ int main() {
     Vector3<double> lookUp = Vector3<double>(0.0, 0.0, 1.0);
     int width = 800;
     int height = 800;
-    double fovWidth = 120.0;
-    double fovHeight = 120.0;
+    double fovWidth = 100.0;
+    double fovHeight = 100.0;
     Camera camera = Camera(lookAt, lookFrom, lookUp, width, height, fovWidth, fovHeight);
 
     // create light
     Vector3<double> directionToLight = Vector3<double>(1.0, 1.0, 1.0);
-    // Color lightColor = Color(255, 255, 255);
     Color lightColor = Color(1.0, 1.0, 1.0);
-    Color ambientLightColor = Color(0.1, 0.1, 0.1);
+    Color ambientLightColor = Color(0.3, 0.3, 0.3);
     Color backgroundColor = Color(0.04, 0.04, 0.04);
     Light light = Light(lightColor, directionToLight, ambientLightColor, backgroundColor);
 
@@ -53,7 +52,8 @@ int main() {
     // create a purple sphere
     Sphere purpleSphere;
 
-    purpleSphere.setCenter(Vector3( 2.0, 2.0, 0.0));
+    // purpleSphere.setCenter(Vector3( 2.0, 2.0, 0.0));
+    purpleSphere.setCenter(Vector3( 1.0, 0.0, 0.0));
     purpleSphere.setRadius(0.3);
     purpleSphere.setKDiffiuse(0.6);
     purpleSphere.setKSpecular(0.2);
