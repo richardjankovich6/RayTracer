@@ -43,9 +43,10 @@ int main() {
 
     // create light
     Vector3<double> directionToLight = Vector3<double>(1.0, 1.0, 1.0);
-    Color lightColor = Color(255, 255, 255);
-    Color ambientLightColor = Color(25, 25, 25);
-    Color backgroundColor = Color(10, 10, 10);
+    // Color lightColor = Color(255, 255, 255);
+    Color lightColor = Color(1.0, 1.0, 1.0);
+    Color ambientLightColor = Color(0.1, 0.1, 0.1);
+    Color backgroundColor = Color(0.04, 0.04, 0.04);
     Light light = Light(lightColor, directionToLight, ambientLightColor, backgroundColor);
 
 
@@ -57,8 +58,8 @@ int main() {
     purpleSphere.setKDiffiuse(0.6);
     purpleSphere.setKSpecular(0.2);
     purpleSphere.setKAmbient(0.1);
-    purpleSphere.setDiffiuseColor({255, 0, 255});
-    purpleSphere.setSpecularColor({155, 155, 155});
+    purpleSphere.setDiffiuseColor({1.0, 0, 1.0});
+    purpleSphere.setSpecularColor({0.6, 0.6, 0.6});
     purpleSphere.setKGloss(2.0);
     purpleSphere.setLight(light);
 

@@ -6,11 +6,11 @@
 #ifndef COLOR_H
 #define COLOR_H
 
-inline int clamp(int i, int min = 0, int max = 255) {
-    return i < min ? min : i > max ? max : i;
+inline int clamp(double i, double min = 0, double max = 1.0) {
+    return i < min ? min : i > max ? static_cast<int>(max * 255.0) : static_cast<int>(i * 255.0);
 }
 
-using Color = Vector3<int>;
+using Color = Vector3<double>;
 inline std::ostream& operator<<(std::ostream& out, const Color& c) {
     return out << clamp(c.x()) << ", " << clamp(c.y()) << ", " << clamp(c.z()) << "  ";
 }
