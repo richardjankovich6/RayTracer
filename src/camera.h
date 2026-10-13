@@ -30,8 +30,8 @@ public:
     Camera(Point lookAt, Point lookFrom, Vector3<double> lookUp, 
         int width, int height, double fov)
     : lookAt(lookAt), lookFrom(lookFrom), lookUp(lookUp), 
-    width(width), height(height), fov(fov) {
-        
+    width(width), height(height), fov(fov)
+    {    
         double magnitude = (lookAt - lookFrom).length();
 
         double aspectRatio = static_cast<double>(width) / static_cast<double>(height);
@@ -45,10 +45,9 @@ public:
         halfPixelHeight = heightExtent / height;
     }
 
-
     Ray makeRay(int w, int h) {
-        double x = -widthExtent + halfPixelWidth * (static_cast<double>(w) + 0.5) * 2;
-        double y = heightExtent - halfPixelHeight * (static_cast<double>(h) + 0.5) * 2;
+        double x = -widthExtent + halfPixelWidth * (2 * static_cast<double>(w) + 1.0);
+        double y = heightExtent - halfPixelHeight * (2 * static_cast<double>(h) + 1.0);
 
         Vector3<double> direction = Vector3<double>(x, y, lookAt.z()) - lookFrom;
 
