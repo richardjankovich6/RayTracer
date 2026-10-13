@@ -3,31 +3,18 @@
 #include <iostream>
 #include <fstream>
 #include<sstream>
-// #include <cmath>
 
-// #include "globals.h"
 #include "vector3.h"
 #include "color.h"
 #include "point.h"
 #include "ray.h"
 #include "sphere.h"
-
 #include "camera.h"
 
 using namespace std;
 
-// void perspClip(int fovw, int fovh, double near, double far);
-
 
 int maxDepth = 2;
-
-// Vector3<> lookAt = { 0, 0, 0 };
-// Vector3<> lookFrom = { 0, 0, 1 };
-// Vector3<> lookUp = { 0, 1, 0 };
-// Vector3<> dirToLight = { .0f, 1.f, .0f };
-// Vector3<> lightColor = { 1., 1., 1. };
-// Vector3<> ambientLight = { .0f, .0f, .0f };
-// Vector3<> backgroundColor = { .2f, .2f, .2f };
 
 int main() {
 
@@ -70,7 +57,6 @@ int main() {
 
     pic << "P3\n" << width << " " << height << "\n255\n";
 
-    // Vector3<double> lookDirection = unitVec(lookAt - lookFrom);
     Vector3<double> lookDirection = unitVec(lookFrom - lookAt);
     Color c;
     Ray r;
@@ -100,10 +86,3 @@ int main() {
     
     return 0;
 }
-
-// void perspClip(int fovw, int fovh, double near, double far) {
-//     double ar = static_cast<double>(width) / static_cast<double>(height);
-//     double zoomw = 1 / tan(fovw / 2);
-//     double zoomh = 1 / tan(fovh / 2);
-//     double fn = near - far;
-// }
