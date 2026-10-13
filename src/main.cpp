@@ -15,15 +15,7 @@ using namespace std;
 
 int maxDepth = 2;
 
-Ray makeRay(Camera camera, int w, int h) {
 
-    double x = -camera.widthExtent + camera.halfPixelWidth * (static_cast<double>(w) + 0.5) * 2;
-    double y = camera.heightExtent - camera.halfPixelHeight * (static_cast<double>(h) + 0.5) * 2;
-
-    Vector3<double> direction = Vector3<double>(x, y, camera.lookAt.z()) - camera.lookFrom;
-
-    return Ray(camera.lookFrom, unitVec(direction));
-}
 
 
 Camera declareCamera() {
@@ -36,33 +28,8 @@ Camera declareCamera() {
     constexpr int height = 800;
     constexpr double fov = 90.0;
 
-    // calculate camera values
-
-    double magnitude = (lookAt - lookFrom).length();
-
-    double aspectRatio = static_cast<double>(width) / static_cast<double>(height);
-    double tangentHeight = tan(fov / aspectRatio / 2 * M_PI / 180.0);
-    double tangentWidth = tan(fov / 2 * M_PI / 180.0);
-
-    double widthExtent = abs(tangentWidth * magnitude);
-    double heightExtent = abs(tangentHeight * magnitude);
-
-    double halfPixelWidth = widthExtent / width;
-    double halfPixelHeight = heightExtent / height;
-
     // create camera
-    Camera camera;
-    camera.lookAt = lookAt;
-    camera.lookFrom = lookFrom;
-    camera.lookUp = lookUp;
-    camera.width = width;
-    camera.height = height;
-    camera.fov = fov;
-    camera.widthExtent = widthExtent;
-    camera.heightExtent = heightExtent;
-    camera.halfPixelWidth = halfPixelWidth;
-    camera.halfPixelHeight = halfPixelHeight;
-
+    Camera camera = Camera(lookAt, lookFrom, lookUp, width, height, fov);
     return camera;
 }
 
@@ -123,11 +90,11 @@ int main() {
 
     for (int h = 0; h < camera.height; h++) {
         for (int w = 0; w < camera.width; w++) {
-            r = makeRay(camera, w, h);
+            r = camera.makeRay(w, h);
 
-            if (purpleSphere.intersetRay(p, r)) {
-                c = purpleSphere.getColor(p, lookDirection);
-                // c = blueSphere.getColor(p, lookDirection);
+            if (blueSphere.intersetRay(p, r)) {
+                // c = purpleSphere.getColor(p, lookDirection);
+                c = blueSphere.getColor(p, lookDirection);
 
             }
             else {
