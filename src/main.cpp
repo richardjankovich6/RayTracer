@@ -32,9 +32,9 @@ int maxDepth = 2;
 int main() {
 
     // create camera
-    Point lookAt = Point(1.0, 0.0, 0.0);
-    Point lookFrom = Point(0.0, 0.0, 0.0);
-    Vector3<double> lookUp = Vector3<double>(0.0, 0.0, 1.0);
+    Point lookAt = Point(0.0, 0.0, 0.0);
+    Point lookFrom = Point(0.0, 0.0, 1.0);
+    Vector3<double> lookUp = Vector3<double>(0.0, 1.0, 0.0);
     int width = 800;
     int height = 800;
     double fovWidth = 100.0;
@@ -53,7 +53,7 @@ int main() {
     Sphere purpleSphere;
 
     // purpleSphere.setCenter(Vector3( 2.0, 2.0, 0.0));
-    purpleSphere.setCenter(Vector3( 1.0, 0.0, 0.0));
+    purpleSphere.setCenter(Vector3( 0.0, 0.0, 0.0));
     purpleSphere.setRadius(0.3);
     purpleSphere.setKDiffiuse(0.6);
     purpleSphere.setKSpecular(0.2);
