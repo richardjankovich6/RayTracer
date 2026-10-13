@@ -15,7 +15,7 @@ class Sphere : public Primitive {
 
 private:
 
-    Vector3<double> center;
+    Point center;
     double radius;
 
 public:

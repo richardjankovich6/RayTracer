@@ -5,12 +5,9 @@
 
 #include <cmath>
 #include <iostream>
-// #include <string>
 
 template <typename ntype = double>
 struct Vector3 {
-public:
-	//typename n = ntype;
 	ntype vec[3];
 
 	Vector3() : vec{ 0,0,0 } {};
@@ -49,35 +46,11 @@ public:
 	}
 };
 
-// using point3 = Vector3<double>;
-
-
-// inline std::ostream& operator <<(std::ostream& out, const Vector3<int>& v) {
-// 	out << " %d %d %d ", v.vec[0], v.vec[1], v.vec[2];
-// 	// out << " %d %d %d ", v.vec[0], v.vec[1], v.vec[2];
-// 	//out << static_cast<int>(v.e[0]) << ' ' << static_cast<int>(v.e[1]) << ' ' << static_cast<int>(v.e[2]);
-// 	return out;
-// 	//return out << " %d %d %d ",  v.e[0], v.e[1], v.e[2];
-// 	//return out << v.e[0] << ' ' << v.e[1] << ' ' << v.e[2];
-// };
-
-// inline std::ostream& OutputColor(std::ostream& out, const Vector3<int>& v) {
-//     return out << "(" << v.x << ", " << v.y << ", " << v.z << ")";
-// }
-
 template<typename T>
 std::ostream& operator<<(std::ostream& out, const Vector3<T>& v) {
-    // return out << "(" << v.vec[0] << ", " << v.vec[1] << ", " << v.vec[2] << ")";
     return out << "(" << v.x() << ", " << v.y() << ", " << v.z() << ")";
 }
 
-
-//inline std::ostream& operator <<(std::ostream& out, const vec3<float>& v) {
-//	return out << v.e[0] << ' ' << v.e[1] << ' ' << v.e[2];
-//}
-//inline std::ostream& operator <<(std::ostream& out, const vec3<double>& v) {
-//	return out << v.e[0] << ' ' << v.e[1] << ' ' << v.e[2];
-//}
 
 template<typename T>
 inline Vector3<T> operator+(const Vector3<T>& u, const Vector3<T>& v) {
@@ -99,22 +72,6 @@ inline Vector3<A> operator*(const Vector3<A>& u, const Vector3<B>& v) {
 	return Vector3<A>(u.vec[0] * v.vec[0], u.vec[1] * v.vec[1], u.vec[2] * v.vec[2]);
 };
 
-// inline Vector3<> operator*(double t, const Vector3<>& v) {
-// 	return Vector3<>(t * v.vec[0], t * v.vec[1], t * v.vec[2]);
-// };
-
-// inline Vector3<> operator*(const Vector3<>& v, double t) {
-// 	return t * v;
-// };
-
-// inline Vector3<int> operator*(double t, const Vector3<int>& v) {
-// 	return Vector3<int>(t * v.vec[0], t * v.vec[1], t * v.vec[2]);
-// };
-
-// inline Vector3<int> operator*(const Vector3<int>& v, double t) {
-// 	return t * v;
-// };
-
 template<typename A, typename B>
 inline Vector3<A> operator*(B t, const Vector3<A>& v) {
 	return Vector3<A>(t * v.vec[0], t * v.vec[1], t * v.vec[2]);
@@ -133,7 +90,6 @@ inline Vector3<A> operator/(const Vector3<A>& v, B t) {
 template<typename A, typename B>
 inline Vector3<A> operator/(B t, const Vector3<A>& v) {
 	return Vector3<A>(t / v.vec[0], t / v.vec[1], t / v.vec[2]);
-	// return (1 / v) * v;
 };
 
 template<typename T>

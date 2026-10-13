@@ -10,7 +10,6 @@
 #define CAMERA_H
 
 struct Camera {
-public:
 
     Point lookAt;
     Point lookFrom;
