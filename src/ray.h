@@ -6,7 +6,7 @@
 #ifndef RAY_H
 #define RAY_H
 
-class Ray {
+struct Ray {
 public:
     Ray() {}
     Ray(const Point& origin, const Vector3<>& direction) : orig(origin), dir(direction) {}

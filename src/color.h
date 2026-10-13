@@ -15,14 +15,4 @@ inline std::ostream& operator<<(std::ostream& out, const Color& c) {
     return out << clamp(c.x()) << ", " << clamp(c.y()) << ", " << clamp(c.z()) << "  ";
 }
 
-
-// Color& operator*=(Color This, double t) {
-//     // Color c;
-    
-//     This[0] *= t;
-//     This[1] *= t;
-//     This[2] *= t;
-//     return This;
-// }
-
 #endif

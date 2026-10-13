@@ -5,10 +5,10 @@
 
 #include <cmath>
 #include <iostream>
-#include <string>
+// #include <string>
 
 template <typename ntype = double>
-class Vector3 {
+struct Vector3 {
 public:
 	//typename n = ntype;
 	ntype vec[3];

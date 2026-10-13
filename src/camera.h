@@ -10,7 +10,7 @@
 #define CAMERA_H
 
 
-class Camera {
+struct Camera {
 
 private:
     Point lookAt;
