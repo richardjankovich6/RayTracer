@@ -9,63 +9,46 @@
 #ifndef CAMERA_H
 #define CAMERA_H
 
+struct Camera {
 
-class Camera {
-
-private:
     Point lookAt;
     Point lookFrom;
-    
     Vector3<double> lookUp;
 
     int width;
     int height;
 
-    double fovWidth;
-    double fovHeight;
+    double fov;
 
-    double xExtent;
-    double yExtent;
+    double widthExtent;
+    double heightExtent;
 
-    double hpx;
-    double hpy;
+    double halfPixelWidth;
+    double halfPixelHeight;
 
-public:
-
-    Camera() {};
-
-    Camera(Point lookAt, Point lookFrom, Vector3<double> lookUp, int width,
-    int height, double fovWidth, double fovHeight)
-    : lookAt(lookAt), lookFrom(lookFrom), lookUp(lookUp), width(width),
-    height(height), fovWidth(fovWidth), fovHeight(fovHeight) {
-
-        // convert to radians
-        double fw = fovWidth * M_PI / 180.0;
-        double fh = fovHeight * M_PI / 180.0;
-
+    Camera(Point lookAt, Point lookFrom, Vector3<double> lookUp, 
+        int width, int height, double fov)
+    : lookAt(lookAt), lookFrom(lookFrom), lookUp(lookUp), 
+    width(width), height(height), fov(fov)
+    {    
         double magnitude = (lookAt - lookFrom).length();
-        // xExtent = fabs(tan(fw / 2) * (lookAt - lookFrom).length());
-        xExtent = std::abs(tan(fw / 2) * magnitude);
-        // yExtent = fabs(tan(fh / 2) * (lookAt - lookFrom).length() / ((float)width / (float)height));
-        // yExtent = fabs(tan(fh / 2) * (lookAt - lookFrom).length() * static_cast<double>(height) / static_cast<double>(width));
-        yExtent = std::abs(tan(fh / 2) * magnitude * static_cast<double>(height) / static_cast<double>(width));
 
-        hpx = xExtent / width;
-        hpy = yExtent / height;
+        double aspectRatio = static_cast<double>(width) / static_cast<double>(height);
+        double tangentHeight = tan(fov / aspectRatio / 2 * M_PI / 180.0);
+        double tangentWidth = tan(fov / 2 * M_PI / 180.0);
+
+        widthExtent = std::abs(tangentWidth * magnitude);
+        heightExtent = std::abs(tangentHeight * magnitude);
+
+        halfPixelWidth = widthExtent / width;
+        halfPixelHeight = heightExtent / height;
     }
-    
-    Camera(const Camera &) = default;
-    Camera(Camera &&) = default;
-    Camera &operator=(const Camera &) = default;
-    Camera &operator=(Camera &&) = default;
 
     Ray makeRay(int w, int h) {
-
-        double x = -xExtent + hpx * (static_cast<double>(w) + 0.5) * 2;
-        double y = yExtent - hpy * (static_cast<double>(h) + 0.5) * 2;
+        double x = -widthExtent + halfPixelWidth * (2 * static_cast<double>(w) + 1.0);
+        double y = heightExtent - halfPixelHeight * (2 * static_cast<double>(h) + 1.0);
 
         Vector3<double> direction = Vector3<double>(x, y, lookAt.z()) - lookFrom;
-        // Vector3<double> direction = Vector3<double>(x, y, lookAt.z()) - lookFrom;
 
         return Ray(lookFrom, unitVec(direction));
     }

@@ -3,56 +3,55 @@
 #include <iostream>
 #include <fstream>
 #include<sstream>
-// #include <cmath>
 
-// #include "globals.h"
 #include "vector3.h"
 #include "color.h"
 #include "point.h"
 #include "ray.h"
 #include "sphere.h"
-
 #include "camera.h"
 
 using namespace std;
 
-// void perspClip(int fovw, int fovh, double near, double far);
-
-
 int maxDepth = 2;
 
-// Vector3<> lookAt = { 0, 0, 0 };
-// Vector3<> lookFrom = { 0, 0, 1 };
-// Vector3<> lookUp = { 0, 1, 0 };
-// Vector3<> dirToLight = { .0f, 1.f, .0f };
-// Vector3<> lightColor = { 1., 1., 1. };
-// Vector3<> ambientLight = { .0f, .0f, .0f };
-// Vector3<> backgroundColor = { .2f, .2f, .2f };
 
-int main() {
 
-    // create camera
+
+Camera declareCamera() {
+    // declare constants
+
     Point lookAt = Point(0.0, 0.0, 0.0);
     Point lookFrom = Point(0.0, 0.0, 1.0);
     Vector3<double> lookUp = Vector3<double>(0.0, 1.0, 0.0);
-    int width = 800;
-    int height = 800;
-    double fovWidth = 100.0;
-    double fovHeight = 100.0;
-    Camera camera = Camera(lookAt, lookFrom, lookUp, width, height, fovWidth, fovHeight);
+    constexpr int width = 800;
+    constexpr int height = 800;
+    constexpr double fov = 90.0;
 
+    // create camera
+    Camera camera = Camera(lookAt, lookFrom, lookUp, width, height, fov);
+    return camera;
+}
+
+Light declareLight() {
     // create light
     Vector3<double> directionToLight = Vector3<double>(1.0, 1.0, 1.0);
     Color lightColor = Color(1.0, 1.0, 1.0);
     Color ambientLightColor = Color(0.3, 0.3, 0.3);
     Color backgroundColor = Color(0.04, 0.04, 0.04);
     Light light = Light(lightColor, directionToLight, ambientLightColor, backgroundColor);
+    return light;
+}
 
+int main() {
 
+    Camera camera = declareCamera();
+    Light light = declareLight();
+
+    
     // create a purple sphere
     Sphere purpleSphere;
 
-    // purpleSphere.setCenter(Vector3( 2.0, 2.0, 0.0));
     purpleSphere.setCenter(Vector3( 0.0, 0.0, 0.0));
     purpleSphere.setRadius(0.3);
     purpleSphere.setKDiffiuse(0.6);
@@ -63,25 +62,39 @@ int main() {
     purpleSphere.setKGloss(2.0);
     purpleSphere.setLight(light);
 
+
+    Sphere blueSphere;
+    blueSphere.setCenter(Vector3( -1.2, 0.2, -0.8));
+    blueSphere.setRadius(0.4);
+    blueSphere.setKDiffiuse(0.9);
+    blueSphere.setKSpecular(0.2);
+    blueSphere.setKAmbient(0.1);
+    blueSphere.setDiffiuseColor({0.0, 0, 1.0});
+    blueSphere.setSpecularColor({0.6, 0.6, 0.6});
+    blueSphere.setKGloss(2.0);
+    blueSphere.setLight(light);
+
+    Sphere spheres[] = {purpleSphere, blueSphere};
+
     stringstream pic;
 
     // Render
     cout << clock() << "\n";
 
-    pic << "P3\n" << width << " " << height << "\n255\n";
+    pic << "P3\n" << camera.width << " " << camera.height << "\n255\n";
 
-    // Vector3<double> lookDirection = unitVec(lookAt - lookFrom);
-    Vector3<double> lookDirection = unitVec(lookFrom - lookAt);
+    Vector3<double> lookDirection = unitVec(camera.lookFrom - camera.lookAt);
     Color c;
     Ray r;
     Point p;
 
-    for (int h = 0; h < height; h++) {
-        for (int w = 0; w < width; w++) {
+    for (int h = 0; h < camera.height; h++) {
+        for (int w = 0; w < camera.width; w++) {
             r = camera.makeRay(w, h);
 
-            if (purpleSphere.intersetRay(p, r)) {
-                c = purpleSphere.getColor(p, lookDirection);
+            if (blueSphere.intersetRay(p, r)) {
+                // c = purpleSphere.getColor(p, lookDirection);
+                c = blueSphere.getColor(p, lookDirection);
 
             }
             else {
@@ -100,10 +113,3 @@ int main() {
     
     return 0;
 }
-
-// void perspClip(int fovw, int fovh, double near, double far) {
-//     double ar = static_cast<double>(width) / static_cast<double>(height);
-//     double zoomw = 1 / tan(fovw / 2);
-//     double zoomh = 1 / tan(fovh / 2);
-//     double fn = near - far;
-// }

@@ -6,15 +6,13 @@
 #ifndef LIGHT_H
 #define LIGHT_H
 
-class Light {
+struct Light {
 
     Color lightColor;
     Color ambientLight;
     Color backgroundColor;
 
     Vector3<double> directionToLight;
-
-public:
 
     Light(Color lightColor, Vector3<double> directionToLight = {1,0,0}, Color ambientLight = {50, 50, 50}, Color backgroundColor = {20, 20, 20})
     : lightColor(lightColor), ambientLight(ambientLight), backgroundColor(backgroundColor), directionToLight(directionToLight) {}
