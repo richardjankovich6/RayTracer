@@ -67,9 +67,13 @@ public:
         return true;
     }
 
-    virtual Color getColor(Point p, Vector3<double> v) const override {
+    virtual Color getColor(Point p, Vector3<double> v, bool inShadow) const override {
         Vector3 normal = (p - center) / radius;
-        return phongShading(normal, v);
+        return phongShading(normal, v, inShadow);
+    }
+
+    Vector3<double> getNormal(Point p) const override {
+        return (p - center) / radius;
     }
 
 };

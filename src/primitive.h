@@ -20,6 +20,7 @@ protected:
     double kSpecular;
     double kAmbient;
     double kGloss;
+    double reflectiveness;
 
     Color diffuseColor;
     Color specularColor;
@@ -29,15 +30,18 @@ protected:
 
 public:
 
-    Primitive(double kDiffuse, double kSpecular, double kAmbient, double kGloss, Color diffuseColor, Color specularColor, Color ambientColor, Light light)
-    : kDiffuse(kDiffuse), kSpecular(kSpecular), kAmbient(kAmbient), kGloss(kGloss), diffuseColor(diffuseColor), specularColor(specularColor), ambientColor(ambientColor), light(light) {}
+    Primitive(double kDiffuse, double kSpecular, double kAmbient, double kGloss, double reflectiveness, Color diffuseColor, Color specularColor, Color ambientColor, Light light)
+    : kDiffuse(kDiffuse), kSpecular(kSpecular), kAmbient(kAmbient), kGloss(kGloss), reflectiveness(reflectiveness), diffuseColor(diffuseColor), specularColor(specularColor), ambientColor(ambientColor), light(light) {}
     
     Primitive() {};
     virtual ~Primitive() = default;
 
-    Color phongShading(Vector3<double> normal, Vector3<double> lookDirection) const {
+    Color phongShading(Vector3<double> normal, Vector3<double> lookDirection, bool inShadow) const {
         
         Color aColor = light.getAmbientLight() * kAmbient * diffuseColor;
+        if (inShadow) {
+            return aColor;
+        }
 
         double dotProduct = dot(normal, light.getDirectionToLight());
         Color dColor = kDiffuse * light.getLightColor() * diffuseColor * fmax(0.0, dotProduct);
@@ -48,8 +52,7 @@ public:
         reflectVector = unitVec(reflectVector);
         Color sColor = kSpecular * light.getLightColor() * specularColor * pow(fmax(0.0, dot(lookDirection, reflectVector)), kGloss);
 
-        Color finalColor = aColor + sColor + dColor;
-        return finalColor;
+        return aColor + sColor + dColor;
     }
 
     inline double getKDiffiuse() const {return kDiffuse;}
@@ -63,6 +66,9 @@ public:
 
     inline double getKGloss() const {return kGloss;}
     inline void setKGloss(double const val) {kGloss = val;}
+
+    inline double getReflectiveness() const {return reflectiveness;}
+    inline void setReflectiveness(double const val) {reflectiveness = val;}
 
     inline Color getDiffiuseColor() const {return diffuseColor;}
     inline void setDiffiuseColor(Color const val) {diffuseColor = val;}
@@ -84,8 +90,12 @@ public:
     // };
     virtual bool intersetRay(Point& v, Ray ray) const = 0;
 
-    virtual Color getColor(Point p, Vector3<double> v) const {
+    virtual Color getColor(Point p, Vector3<double> v, bool inShadow) const {
         return getBackgroundColor();
+    }
+
+    virtual Vector3<double> getNormal(Point p) const {
+        return Vector3<double>();
     }
 
     // virtual Vector3<double> intersetRay(Ray ray) const = 0;

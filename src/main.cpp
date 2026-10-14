@@ -18,7 +18,7 @@
 
 using namespace std;
 
-int maxDepth = 2;
+int MAXDEPTH = 20;
 
 Camera declareCamera() {
     // declare constants
@@ -41,8 +41,20 @@ Light declareLight() {
     return Light(lightColor, directionToLight, ambientLightColor, backgroundColor);
 }
 
+bool castShadowRay(Ray ray, const vector<Primitive*> primitives, int ignoredIndex) {
+    for (int i = 0; i < primitives.size(); i++) {
+        if (i == ignoredIndex) { continue; }
+        Point p = ray.origin();
+        if (primitives[i]->intersetRay(p, ray)) {
+            return true;
+        }
+    }
+    // int nearestPrimitiveIndex = -1;
+    return false;
+}
+
 // Color castRay(Ray, Vector3<double> lookDirection, const vector<Sphere> spheres, const vector<Triangle> triangles, int depth = 0) {
-Color castRay(const Ray ray, const Vector3<double> lookDirection, const vector<Primitive*> primitives, int depth = 0) {
+Color castRay(const Ray ray, const Vector3<double> lookDirection, const vector<Primitive*> primitives, Light light, int depth = 0, int ignoredIndex = -1) {
 
     vector<Point> points = {};
     // int totalPrimitives = spheres.size() + triangles.size();
@@ -53,6 +65,7 @@ Color castRay(const Ray ray, const Vector3<double> lookDirection, const vector<P
     Point nearestPoint;
 
     for (int i = 0; i < totalPrimitives; i++) {
+        if (i == ignoredIndex) { continue; }
         if (primitives[i]->intersetRay(currentPoint, ray)) {
             double currentDistance = (currentPoint - ray.origin()).length();
             if (currentDistance < lowestDistance) { 
@@ -64,10 +77,26 @@ Color castRay(const Ray ray, const Vector3<double> lookDirection, const vector<P
     }
 
     if (nearestPrimitiveIndex == -1) {
-        return primitives[0]->getBackgroundColor();
+        return light.getBackgroundColor();
     }
 
-    return primitives[nearestPrimitiveIndex]->getColor(nearestPoint, lookDirection);
+    bool inShadow = castShadowRay(Ray(nearestPoint, light.directionToLight), primitives, nearestPrimitiveIndex);
+
+    Color color = primitives[nearestPrimitiveIndex]->getColor(nearestPoint, lookDirection, inShadow);
+
+    if (depth < MAXDEPTH && primitives[nearestPrimitiveIndex]->getReflectiveness() > 0) {
+    // if (depth < MAXDEPTH) {
+
+        Ray reflectRay = Ray(nearestPoint, primitives[nearestPrimitiveIndex]->getNormal(nearestPoint));
+
+        Color recursiveColor = castRay(reflectRay, lookDirection, primitives, light, depth + 1, nearestPrimitiveIndex);
+
+
+        color = recursiveColor + color * (1 - primitives[nearestPrimitiveIndex]->getReflectiveness());
+
+    }
+
+    return color;
 
 }
 
@@ -84,37 +113,41 @@ int main() {
     purpleSphere.setKDiffiuse(0.6);
     purpleSphere.setKSpecular(0.2);
     purpleSphere.setKAmbient(0.1);
+    purpleSphere.setReflectiveness(0.0);
     purpleSphere.setDiffiuseColor({1.0, 0, 1.0});
     purpleSphere.setSpecularColor({0.6, 0.6, 0.6});
     purpleSphere.setKGloss(2.0);
     purpleSphere.setLight(light);
 
     Sphere blueSphere;
-    blueSphere.setCenter(Vector3( -1.2, 0.2, -0.8));
+    blueSphere.setCenter(Vector3( -1.2, 0.2, -0.4));
     blueSphere.setRadius(0.4);
     blueSphere.setKDiffiuse(0.9);
     blueSphere.setKSpecular(0.2);
     blueSphere.setKAmbient(0.1);
+    blueSphere.setReflectiveness(0.0);
     blueSphere.setDiffiuseColor({0.0, 0, 1.0});
     blueSphere.setSpecularColor({0.6, 0.6, 0.6});
     blueSphere.setKGloss(2.0);
     blueSphere.setLight(light);
 
-    // Sphere spheres[] = {purpleSphere, blueSphere};
+    Sphere redSphere;
+    redSphere.setCenter(Vector3( -0.8, 0.7, -0.8));
+    redSphere.setRadius(0.4);
+    redSphere.setKDiffiuse(0.6);
+    redSphere.setKSpecular(0.7);
+    redSphere.setKAmbient(0.1);
+    redSphere.setReflectiveness(0.6);
+    redSphere.setDiffiuseColor({1.0, 0.1, 0.1});
+    redSphere.setSpecularColor({0.6, 0.6, 0.6});
+    redSphere.setKGloss(2.0);
+    redSphere.setLight(light);
 
-    vector<Primitive*> primitives = {&purpleSphere, &blueSphere};
-    // vector<Primitive*> primitives;
-    // primitives.push_back(&purpleSphere);
-    //  {purpleSphere, blueSphere};
-    
-    // vector<Sphere> spheres = {purpleSphere, blueSphere};
-    // vector<Triangle> triangles = {};
+    vector<Primitive*> primitives = {&purpleSphere, &blueSphere, &redSphere};
 
     stringstream pic;
 
     // Render
-    cout << clock() << "\n";
-
     pic << "P3\n" << camera.width << " " << camera.height << "\n255\n";
 
     Vector3<double> lookDirection = unitVec(camera.lookFrom - camera.lookAt);
@@ -122,11 +155,12 @@ int main() {
     Ray r;
     Point p;
 
+    cout << clock() << "\n";
     for (int h = 0; h < camera.height; h++) {
         for (int w = 0; w < camera.width; w++) {
             r = camera.makeRay(w, h);
 
-            c = castRay(r, lookDirection, primitives, 0);
+            c = castRay(r, lookDirection, primitives, light, 0);
 
             // if (blueSphere.intersetRay(p, r)) {
             //     // c = purpleSphere.getColor(p, lookDirection);
@@ -140,7 +174,6 @@ int main() {
         }
         pic << '\n';
     }
-
     cout << "\n" << clock() << "\n";
 
 
