@@ -35,7 +35,7 @@ public:
     Primitive() {};
     virtual ~Primitive() = default;
 
-    Color phongShading(Vector3<double> normal, Vector3<double> lookDirection) {
+    Color phongShading(Vector3<double> normal, Vector3<double> lookDirection) const {
         
         Color aColor = light.getAmbientLight() * kAmbient * diffuseColor;
 
@@ -73,9 +73,20 @@ public:
     inline Color getAmbientColor() const {return ambientColor;}
     inline void setAmbientColor(Color const val) {ambientColor = val;}
 
+    inline Color getBackgroundColor() const { return light.getBackgroundColor(); }
+
     inline void setLight(const Light l) { light = l; }
 
-    virtual bool intersetRay(Vector3<double>& v, Ray ray) const = 0;
+    
+
+    // virtual bool intersetRay(Point& v, const Ray ray) const {
+    //     return false;
+    // };
+    virtual bool intersetRay(Point& v, Ray ray) const = 0;
+
+    virtual Color getColor(Point p, Vector3<double> v) const {
+        return getBackgroundColor();
+    }
 
     // virtual Vector3<double> intersetRay(Ray ray) const = 0;
 };

@@ -24,10 +24,10 @@ struct Light {
     Light &operator=(const Light &) = default;
     Light &operator=(Light &&) = default;
 
-    Color getLightColor() { return lightColor; }
-    Color getAmbientLight() { return ambientLight; }
-    Color getBackgroundColor() { return backgroundColor; }
-    Vector3<double> getDirectionToLight() { return directionToLight; }
+    inline Color getLightColor() const { return lightColor; }
+    inline Color getAmbientLight() const { return ambientLight; }
+    inline Color getBackgroundColor() const { return backgroundColor; }
+    inline Vector3<double> getDirectionToLight() const { return directionToLight; }
 
 };
 

@@ -11,6 +11,12 @@ class Triangle : public Primitive {
 public:
 
     Triangle() {};
+
+    bool intersetRay(Point& p, const Ray ray) const override {
+        return false;   
+    }
+
+    
 };
 
 #endif
