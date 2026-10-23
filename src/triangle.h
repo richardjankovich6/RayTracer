@@ -21,6 +21,7 @@ class Triangle : public Primitive {
 
 public:
 
+    Triangle() {};
     Triangle(Point p1, Point p2, Point p3) : p1(p1), p2(p2), p3(p3) {
         Vector3<double> v1 = p3 - p2;
         Vector3<double> v2 = p1 - p2;
@@ -33,6 +34,11 @@ public:
 
         doubleSided = true;
     };
+
+    void setP1(Point p) { p1 = p; }
+    void setP2(Point p) { p2 = p; }
+    void setP3(Point p) { p3 = p; }
+    void setDoubleSided(bool b) { doubleSided = b; }
 
     bool intersetRay(Point& p, const Ray ray) const override {
         double vd = dot(normal, ray.direction());
