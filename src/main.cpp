@@ -88,6 +88,24 @@ int main() {
     redSphere.setKGloss(2.0);
     redSphere.setLight(light);
 
+    Point p1 = Point( 1.0, 1.0, 1.0);
+    Point p2 = Point( -1.0, 1.0, 1.0);
+    Point p3 = Point( 1.0, -1.0, 1.0);
+    
+    Triangle greyTriangle = Triangle(p1, p2, p3);
+
+
+    greyTriangle.setKDiffiuse(0.6);
+    greyTriangle.setKSpecular(0.7);
+    greyTriangle.setKAmbient(0.1);
+    greyTriangle.setReflectiveness(0.6);
+    greyTriangle.setDiffiuseColor({0.3, 0.3, 0.3});
+    greyTriangle.setSpecularColor({0.6, 0.6, 0.6});
+    greyTriangle.setKGloss(2.0);
+    greyTriangle.setLight(light);
+
+
+    // vector<Primitive*> primitives = {&purpleSphere, &blueSphere, &redSphere, &greyTriangle};
     vector<Primitive*> primitives = {&purpleSphere, &blueSphere, &redSphere};
 
 
