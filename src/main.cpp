@@ -8,7 +8,6 @@
 #include "vector3.h"
 #include "color.h"
 #include "point.h"
-#include "ray.h"
 
 #include "camera.h"
 
@@ -27,10 +26,10 @@ Camera declareCamera() {
     // declare constants
 
     Point lookAt = Point(0.0, 0.0, 0.0);
-    Point lookFrom = Point(0.0, 0.0, 1.0);
+    Point lookFrom = Point(0.0, 0.0, 3.0);
     Vector3<double> lookUp = Vector3<double>(0.0, 1.0, 0.0);
-    constexpr int width = 800;
-    constexpr int height = 800;
+    constexpr int width = 1920;
+    constexpr int height = 1080;
     constexpr double fov = 90.0;
     return Camera(lookAt, lookFrom, lookUp, width, height, fov);
 }
@@ -55,7 +54,7 @@ int main() {
     Sphere purpleSphere;
     purpleSphere.setCenter(Vector3( 0.0, 0.0, 0.0));
     purpleSphere.setRadius(0.3);
-    purpleSphere.setKDiffiuse(0.6);
+    purpleSphere.setKDiffiuse(0.8);
     purpleSphere.setKSpecular(0.2);
     purpleSphere.setKAmbient(0.1);
     purpleSphere.setReflectiveness(0.0);
@@ -67,8 +66,8 @@ int main() {
     Sphere blueSphere;
     blueSphere.setCenter(Vector3( -1.2, 0.2, -0.4));
     blueSphere.setRadius(0.4);
-    blueSphere.setKDiffiuse(0.9);
-    blueSphere.setKSpecular(0.2);
+    blueSphere.setKDiffiuse(0.6);
+    blueSphere.setKSpecular(0.4);
     blueSphere.setKAmbient(0.1);
     blueSphere.setReflectiveness(0.0);
     blueSphere.setDiffiuseColor({0.0, 0, 1.0});
@@ -88,25 +87,40 @@ int main() {
     redSphere.setKGloss(2.0);
     redSphere.setLight(light);
 
-    Point p1 = Point( 1.0, 1.0, 1.0);
-    Point p2 = Point( -1.0, 1.0, 1.0);
-    Point p3 = Point( 1.0, -1.0, 1.0);
+    // Point p1 = Point(1.0, 1.0, 1.0);
+    // Point p2 = Point(-1.0, 1.0, 1.0);
+    // Point p3 = Point(1.0, -1.0, 1.0);
     
-    Triangle greyTriangle = Triangle(p1, p2, p3);
+    Triangle greyTriangle = Triangle(
+        Point(0.0, 1.0, 1.5),
+        Point(-1.0, 0.5, 1.5),
+        Point(1.0, 0.5, 1.5)
+    );
 
+    // Triangle greyTriangle = Triangle(
+    //     Point(-2.0, -2.0, 0.0),
+    //     Point(-2.0, 0.0, -1.0),
+    //     Point(-2.0, 0.0, 1.0)
+    // );
+
+    // Triangle greyTriangle = Triangle(
+    //     Point(-2.0, 1.0, 0.0),
+    //     Point(-2.0, -1.0, -1.0),
+    //     Point(-2.0, -1.0, 1.0)
+    // );
 
     greyTriangle.setKDiffiuse(0.6);
     greyTriangle.setKSpecular(0.7);
     greyTriangle.setKAmbient(0.1);
     greyTriangle.setReflectiveness(0.6);
-    greyTriangle.setDiffiuseColor({0.3, 0.3, 0.3});
+    greyTriangle.setDiffiuseColor({1.3, 0.3, 0.3});
     greyTriangle.setSpecularColor({0.6, 0.6, 0.6});
     greyTriangle.setKGloss(2.0);
     greyTriangle.setLight(light);
 
 
-    // vector<Primitive*> primitives = {&purpleSphere, &blueSphere, &redSphere, &greyTriangle};
-    vector<Primitive*> primitives = {&purpleSphere, &blueSphere, &redSphere};
+    vector<Primitive*> primitives = {&purpleSphere, &blueSphere, &redSphere, &greyTriangle};
+    // vector<Primitive*> primitives = {&purpleSphere, &blueSphere, &redSphere};
 
 
     Raytracer raytracer;
