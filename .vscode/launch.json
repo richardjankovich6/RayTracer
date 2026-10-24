@@ -24,25 +24,18 @@
             ]
         },
         {
-            "name": "Launch",
-            "type": "cppdbg",
-            "request": "launch",
-            "program": "${workspaceRoot}/build/RayTracer",
-            "args": [],
-            "cwd": "${workspaceRoot}"
-        },
-        {
-            "name": "build and run RayTracer (debug)",
+            "name": "debug RayTracer",
             "type": "cppdbg",
             "request": "launch",
             "program": "${workspaceRoot}/build/RayTracer",
             "MIMode": "gdb",
             "miDebuggerPath": "/usr/bin/gdb",
-            "stopAtEntry": true,
+            "stopAtEntry": false,
             "args": [],
             "externalConsole": false,
-            "cwd": "${workspaceRoot}",
+            "cwd": "${workspaceRoot}/build",
 
+            // "preLaunchTask": "c++: build active file",
             "preLaunchTask": "Build Debug RayTracer",
             "internalConsoleOptions": "openOnSessionStart",
 
@@ -55,12 +48,12 @@
             // ]
         },
         {
-            "name": "build and run RayTracer",
+            "name": "run RayTracer",
             "type": "cppdbg",
             "request": "launch",
             "program": "${workspaceRoot}/build/RayTracer",
             "args": [],
-            "cwd": "${workspaceRoot}",
+            "cwd": "${workspaceRoot}/build",
             "preLaunchTask": "Build Release RayTracer",
         }
     ]
