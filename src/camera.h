@@ -26,6 +26,8 @@ struct Camera {
     double halfPixelWidth;
     double halfPixelHeight;
 
+    Camera() {};
+
     Camera(Point lookAt, Point lookFrom, Vector3<double> lookUp, 
         int width, int height, double fov)
     : lookAt(lookAt), lookFrom(lookFrom), lookUp(lookUp), 
@@ -44,7 +46,7 @@ struct Camera {
         halfPixelHeight = heightExtent / height;
     }
 
-    Ray makeRay(int w, int h) {
+    Ray makeRay(int w, int h) const {
         double x = -widthExtent + halfPixelWidth * (2 * static_cast<double>(w) + 1.0);
         double y = heightExtent - halfPixelHeight * (2 * static_cast<double>(h) + 1.0);
 

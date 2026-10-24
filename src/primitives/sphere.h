@@ -35,7 +35,7 @@ public:
         ambientColor = IambientColor;
     }
 
-    inline Vector3<> getReflectVec(Vector3<> normal, Vector3<> directionToLight) {
+    inline Vector3<double> getReflectVec(Vector3<double> normal, Vector3<double> directionToLight) {
         return unitVec(2 * normal * dot(normal, directionToLight) - directionToLight);
     }
 
@@ -45,27 +45,7 @@ public:
     double getRadius() const { return radius; }
     void setRadius(double const val) { radius = val; }
 
-    bool intersetRay(Point& p, const Ray ray) const override {
-        Vector3 oc = center - ray.origin();
-        bool bInside = oc.length() < radius;
-
-        double tca = dot(oc, ray.direction());
-
-        if (!bInside && (tca < 0)) {
-            // ray points away from sphere
-            return false;
-        }
-
-        double thcSquare = pow(radius, 2) - oc.lengthSquared() + pow(tca, 2);
-        if (thcSquare < 0) {
-            return false;
-        }
-
-        double t = tca;
-        t += bInside ? sqrt(thcSquare) : -sqrt(thcSquare);
-        p = ray.origin() + ray.direction() * t;
-        return true;
-    }
+    bool intersetRay(Point& p, const Ray ray) const override;
 
     virtual Color getColor(Point p, Vector3<double> v, bool inShadow) const override {
         Vector3 normal = (p - center) / radius;

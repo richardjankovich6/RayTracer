@@ -12,9 +12,12 @@
 
 #include "camera.h"
 
-#include "primitive.h"
-#include "sphere.h"
-#include "triangle.h"
+#include "primitives/primitive.h"
+#include "primitives/sphere.h"
+#include "primitives/triangle.h"
+
+
+#include "raytracer.h"
 
 using namespace std;
 
@@ -41,64 +44,6 @@ Light declareLight() {
     return Light(lightColor, directionToLight, ambientLightColor, backgroundColor);
 }
 
-bool castShadowRay(Ray ray, const vector<Primitive*> primitives, int ignoredIndex) {
-    for (int i = 0; i < primitives.size(); i++) {
-        if (i == ignoredIndex) { continue; }
-        Point p = ray.origin();
-        if (primitives[i]->intersetRay(p, ray)) {
-            return true;
-        }
-    }
-    // int nearestPrimitiveIndex = -1;
-    return false;
-}
-
-// Color castRay(Ray, Vector3<double> lookDirection, const vector<Sphere> spheres, const vector<Triangle> triangles, int depth = 0) {
-Color castRay(const Ray ray, const Vector3<double> lookDirection, const vector<Primitive*> primitives, Light light, int depth = 0, int ignoredIndex = -1) {
-
-    vector<Point> points = {};
-    // int totalPrimitives = spheres.size() + triangles.size();
-    int totalPrimitives = primitives.size();
-    int nearestPrimitiveIndex = -1;
-    double lowestDistance = std::numeric_limits<double>::max();
-    Point currentPoint = Point();
-    Point nearestPoint;
-
-    for (int i = 0; i < totalPrimitives; i++) {
-        if (i == ignoredIndex) { continue; }
-        if (primitives[i]->intersetRay(currentPoint, ray)) {
-            double currentDistance = (currentPoint - ray.origin()).length();
-            if (currentDistance < lowestDistance) { 
-                nearestPrimitiveIndex = i;
-                lowestDistance = currentDistance;
-                nearestPoint = currentPoint;
-            }
-        }
-    }
-
-    if (nearestPrimitiveIndex == -1) {
-        return light.getBackgroundColor();
-    }
-
-    bool inShadow = castShadowRay(Ray(nearestPoint, light.directionToLight), primitives, nearestPrimitiveIndex);
-
-    Color color = primitives[nearestPrimitiveIndex]->getColor(nearestPoint, lookDirection, inShadow);
-
-    if (depth < MAXDEPTH && primitives[nearestPrimitiveIndex]->getReflectiveness() > 0) {
-    // if (depth < MAXDEPTH) {
-
-        Ray reflectRay = Ray(nearestPoint, primitives[nearestPrimitiveIndex]->getNormal(nearestPoint));
-
-        Color recursiveColor = castRay(reflectRay, lookDirection, primitives, light, depth + 1, nearestPrimitiveIndex);
-
-
-        color = recursiveColor + color * (1 - primitives[nearestPrimitiveIndex]->getReflectiveness());
-
-    }
-
-    return color;
-
-}
 
 int main() {
 
@@ -145,35 +90,21 @@ int main() {
 
     vector<Primitive*> primitives = {&purpleSphere, &blueSphere, &redSphere};
 
-    stringstream pic;
 
-    // Render
-    pic << "P3\n" << camera.width << " " << camera.height << "\n255\n";
+    Raytracer raytracer;
+    raytracer.setCamera(camera);
+    raytracer.setLight(light);
+    raytracer.setMaxDepth(MAXDEPTH);
+    raytracer.primitives = primitives;
 
-    Vector3<double> lookDirection = unitVec(camera.lookFrom - camera.lookAt);
-    Color c;
-    Ray r;
-    Point p;
 
     cout << clock() << "\n";
-    for (int h = 0; h < camera.height; h++) {
-        for (int w = 0; w < camera.width; w++) {
-            r = camera.makeRay(w, h);
 
-            c = castRay(r, lookDirection, primitives, light, 0);
+    // stringstream pic;
+    // raytracer.traceRays(pic);
 
-            // if (blueSphere.intersetRay(p, r)) {
-            //     // c = purpleSphere.getColor(p, lookDirection);
-            //     c = blueSphere.getColor(p, lookDirection);
+    stringstream pic = raytracer.traceRays();
 
-            // }
-            // else {
-            //     c = light.getBackgroundColor();
-            // }
-            pic << c;
-        }
-        pic << '\n';
-    }
     cout << "\n" << clock() << "\n";
 
 
