@@ -24,11 +24,10 @@ public:
 
     Sphere(Vector3<double> center, double radius) : center(center), radius(radius), Primitive() {}
 
-    Sphere(Vector3<double> Icenter, double Iradius, double IkDiffuse, double IkSpecular, double IkAmbient, double IkGloss, Color IdiffuseColor, Color IspecularColor, Color IambientColor) {
+    Sphere(Vector3<double> Icenter, double Iradius, float IkDiffuse, float IkSpecular, float IkAmbient, double IkGloss, Color IdiffuseColor, Color IspecularColor, Color IambientColor) {
         center = Icenter;
         radius = Iradius;
-        kDiffuse = IkDiffuse;
-        kSpecular = IkSpecular;
+        setKValues(IkDiffuse, IkSpecular, IkAmbient);
         kGloss = IkGloss;
         diffuseColor = IdiffuseColor;
         specularColor = IspecularColor;
