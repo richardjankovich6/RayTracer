@@ -122,4 +122,9 @@ inline Vector3<A> unitVec(const Vector3<A>& v) {
 	return v / v.length();
 };
 
+template<typename A>
+inline Vector3<A> normalize(const Vector3<A>& v) {
+	return unitVec(v);
+};
+
 #endif
