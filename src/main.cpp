@@ -87,14 +87,26 @@ int main() {
     redSphere.setKGloss(2.0);
     redSphere.setLight(light);
 
+    Sphere redSphere2;
+    redSphere2.setCenter(Vector3( -0.8, 1.7, -0.8));
+    redSphere2.setRadius(0.4);
+    redSphere2.setKDiffiuse(0.6);
+    redSphere2.setKSpecular(0.7);
+    redSphere2.setKAmbient(0.1);
+    redSphere2.setReflectiveness(0.6);
+    redSphere2.setDiffiuseColor({1.0, 0.1, 0.1});
+    redSphere2.setSpecularColor({0.6, 0.6, 0.6});
+    redSphere2.setKGloss(2.0);
+    redSphere2.setLight(light);
+
     // Point p1 = Point(1.0, 1.0, 1.0);
     // Point p2 = Point(-1.0, 1.0, 1.0);
     // Point p3 = Point(1.0, -1.0, 1.0);
     
     Triangle greyTriangle = Triangle(
-        Point(0.0, 1.0, 1.5),
-        Point(-1.0, 0.5, 1.5),
-        Point(1.0, 0.5, 1.5)
+        Point(0.0, 0.5, 1.5),
+        Point(-1.0, 0.0, 1.5),
+        Point(1.0, 0.0, 1.5)
     );
 
     // Triangle greyTriangle = Triangle(
@@ -112,14 +124,14 @@ int main() {
     greyTriangle.setKDiffiuse(0.6);
     greyTriangle.setKSpecular(0.7);
     greyTriangle.setKAmbient(0.1);
-    greyTriangle.setReflectiveness(0.6);
-    greyTriangle.setDiffiuseColor({1.3, 0.3, 0.3});
+    greyTriangle.setReflectiveness(0.0);
+    greyTriangle.setDiffiuseColor({0.8, 0.9, 0.3});
     greyTriangle.setSpecularColor({0.6, 0.6, 0.6});
-    greyTriangle.setKGloss(2.0);
+    greyTriangle.setKGloss(12.0);
     greyTriangle.setLight(light);
 
 
-    vector<Primitive*> primitives = {&purpleSphere, &blueSphere, &redSphere, &greyTriangle};
+    vector<Primitive*> primitives = {&purpleSphere, &blueSphere, &redSphere, &redSphere2, &greyTriangle};
     // vector<Primitive*> primitives = {&purpleSphere, &blueSphere, &redSphere};
 
 
@@ -131,9 +143,6 @@ int main() {
 
 
     cout << clock() << "\n";
-
-    // stringstream pic;
-    // raytracer.traceRays(pic);
 
     stringstream pic = raytracer.traceRays();
 

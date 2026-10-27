@@ -8,7 +8,7 @@ void Triangle::findD() {
     normal = unitVec(cross(v1, v2));
 
     // this is a fucking thing
-    d = -(p1[0] * normal[0] + p1[1] * normal[1] + p1[2] * normal[2]);
+    d = -dot(normal, p1);
 };
 
 bool Triangle::intersetRay(Point& p, const Ray ray) const {
@@ -16,11 +16,11 @@ bool Triangle::intersetRay(Point& p, const Ray ray) const {
     if (vd == 0) {
         return false;
     }
-    if (!doubleSided && vd) {
+    if (!doubleSided && vd > 0) {
         return false;
     } 
 
-    double vo = -(dot(normal, ray.direction()) + d);
+    double vo = -(dot(normal, ray.origin()) + d);
     double t = vo / vd;
     
     if (t < 0) {
@@ -32,8 +32,7 @@ bool Triangle::intersetRay(Point& p, const Ray ray) const {
     bool dot1 = dot(normal, cross(p2 - p1, p - p1)) > 0;
     bool dot2 = dot(normal, cross(p3 - p2, p - p2)) > 0;
     bool dot3 = dot(normal, cross(p1 - p3, p - p3)) > 0;
+    bool intersect = dot1 && dot2 && dot3;
 
-    bool interset = dot1 && dot2 && dot3;
-
-    return interset;
+    return intersect;
 }
