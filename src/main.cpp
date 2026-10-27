@@ -15,6 +15,8 @@
 #include "primitives/sphere.h"
 #include "primitives/triangle.h"
 
+#include "primitives/primitiveParser.h"
+
 
 #include "raytracer.h"
 
@@ -49,90 +51,8 @@ int main() {
     Camera camera = declareCamera();
     Light light = declareLight();
 
-    
-    // create a purple sphere
-    Sphere purpleSphere;
-    purpleSphere.setCenter(Vector3( 0.0, 0.0, 0.0));
-    purpleSphere.setRadius(0.3);
-    purpleSphere.setKDiffiuse(0.8);
-    purpleSphere.setKSpecular(0.2);
-    purpleSphere.setKAmbient(0.1);
-    purpleSphere.setReflectiveness(0.0);
-    purpleSphere.setDiffiuseColor({1.0, 0, 1.0});
-    purpleSphere.setSpecularColor({0.6, 0.6, 0.6});
-    purpleSphere.setKGloss(2.0);
-    purpleSphere.setLight(light);
-
-    Sphere blueSphere;
-    blueSphere.setCenter(Vector3( -1.2, 0.2, -0.4));
-    blueSphere.setRadius(0.4);
-    blueSphere.setKDiffiuse(0.6);
-    blueSphere.setKSpecular(0.4);
-    blueSphere.setKAmbient(0.1);
-    blueSphere.setReflectiveness(0.0);
-    blueSphere.setDiffiuseColor({0.0, 0, 1.0});
-    blueSphere.setSpecularColor({0.6, 0.6, 0.6});
-    blueSphere.setKGloss(2.0);
-    blueSphere.setLight(light);
-
-    Sphere redSphere;
-    redSphere.setCenter(Vector3( -0.8, 0.7, -0.8));
-    redSphere.setRadius(0.4);
-    redSphere.setKDiffiuse(0.6);
-    redSphere.setKSpecular(0.7);
-    redSphere.setKAmbient(0.1);
-    redSphere.setReflectiveness(0.6);
-    redSphere.setDiffiuseColor({1.0, 0.1, 0.1});
-    redSphere.setSpecularColor({0.6, 0.6, 0.6});
-    redSphere.setKGloss(2.0);
-    redSphere.setLight(light);
-
-    Sphere redSphere2;
-    redSphere2.setCenter(Vector3( -0.8, 1.7, -0.8));
-    redSphere2.setRadius(0.4);
-    redSphere2.setKDiffiuse(0.6);
-    redSphere2.setKSpecular(0.7);
-    redSphere2.setKAmbient(0.1);
-    redSphere2.setReflectiveness(0.6);
-    redSphere2.setDiffiuseColor({1.0, 0.1, 0.1});
-    redSphere2.setSpecularColor({0.6, 0.6, 0.6});
-    redSphere2.setKGloss(2.0);
-    redSphere2.setLight(light);
-
-    // Point p1 = Point(1.0, 1.0, 1.0);
-    // Point p2 = Point(-1.0, 1.0, 1.0);
-    // Point p3 = Point(1.0, -1.0, 1.0);
-    
-    Triangle greyTriangle = Triangle(
-        Point(0.0, 0.5, 1.5),
-        Point(-1.0, 0.0, 1.5),
-        Point(1.0, 0.0, 1.5)
-    );
-
-    // Triangle greyTriangle = Triangle(
-    //     Point(-2.0, -2.0, 0.0),
-    //     Point(-2.0, 0.0, -1.0),
-    //     Point(-2.0, 0.0, 1.0)
-    // );
-
-    // Triangle greyTriangle = Triangle(
-    //     Point(-2.0, 1.0, 0.0),
-    //     Point(-2.0, -1.0, -1.0),
-    //     Point(-2.0, -1.0, 1.0)
-    // );
-
-    greyTriangle.setKDiffiuse(0.6);
-    greyTriangle.setKSpecular(0.7);
-    greyTriangle.setKAmbient(0.1);
-    greyTriangle.setReflectiveness(0.0);
-    greyTriangle.setDiffiuseColor({0.8, 0.9, 0.3});
-    greyTriangle.setSpecularColor({0.6, 0.6, 0.6});
-    greyTriangle.setKGloss(12.0);
-    greyTriangle.setLight(light);
-
-
-    vector<Primitive*> primitives = {&purpleSphere, &blueSphere, &redSphere, &redSphere2, &greyTriangle};
-    // vector<Primitive*> primitives = {&purpleSphere, &blueSphere, &redSphere};
+    // std::vector<Primitive*> primitives = JsonPrimitiveParser::parsePrimitives("../scenes/testScene1.json", &light);
+    std::vector<Primitive*> primitives = JsonPrimitiveParser::parsePrimitives("../scenes/boxScene1.json", &light);
 
 
     Raytracer raytracer;

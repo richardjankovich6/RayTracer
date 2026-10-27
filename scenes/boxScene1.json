@@ -1,0 +1,84 @@
+{
+    "primitives": [
+        {
+            "type": "Sphere",
+            "center": [0.0, 0.0, 0.0],
+            "radius": 0.3,
+            "kDiffuse": 0.7,
+            "kSpecular": 0.2,
+            "kAmbient": 0.1,
+            "reflectiveness": 0.0,
+            "diffuseColor": [1.0, 0.0, 1.0],
+            "specularColor": [0.6, 0.6, 0.6],
+            "kGloss": 2.0
+        },
+        {
+            "type": "Sphere",
+            "center": [-1.2, 0.2, -0.4],
+            "radius": 0.4,
+            "kDiffuse": 0.6,
+            "kSpecular": 0.4,
+            "kAmbient": 0.1,
+            "reflectiveness": 0.0,
+            "diffuseColor": [0.0, 0.0, 1.0],
+            "specularColor": [0.6, 0.6, 0.6],
+            "kGloss": 2.0
+        },
+        {
+            "type": "Sphere",
+            "center": [-0.8, 0.7, -0.8],
+            "radius": 0.4,
+            "kDiffuse": 0.6,
+            "kSpecular": 0.7,
+            "kAmbient": 0.1,
+            "reflectiveness": 0.6,
+            "diffuseColor": [1.0, 0.1, 0.1],
+            "specularColor": [0.6, 0.6, 0.6],
+            "kGloss": 2.0
+        },
+        {
+            "type": "Sphere",
+            "center": [-0.8, 1.7, -0.8],
+            "radius": 0.4,
+            "kDiffuse": 0.6,
+            "kSpecular": 0.7,
+            "kAmbient": 0.1,
+            "reflectiveness": 0.6,
+            "diffuseColor": [1.0, 0.1, 0.1],
+            "specularColor": [0.6, 0.6, 0.6],
+            "kGloss": 2.0
+        },
+        {
+            "type": "Triangle",
+            "points": [
+                [-5.0, 5.0, -5.0],
+                [-5.0, -5.0, -5.0],
+                [5.0, -5.0, -5.0]
+            ],
+            "kDiffuse": 0.6,
+            "kSpecular": 0.7,
+            "kAmbient": 0.1,
+            "reflectiveness": 0.0,
+            "diffuseColor": [0.8, 0.9, 0.3],
+            "specularColor": [0.6, 0.6, 0.6],
+            "kGloss": 2.0
+        },
+        {
+            "type": "Triangle",
+            "points": [
+                [-5.0, 5.0, -5.0],
+                [5.0, 5.0, -5.0],
+                [5.0, -5.0, -5.0]
+            ],
+            "kDiffuse": 0.6,
+            "kSpecular": 0.7,
+            "kAmbient": 0.1,
+            "reflectiveness": 0.0,
+            "diffuseColor": [0.8, 0.9, 0.3],
+            "specularColor": [0.6, 0.6, 0.6],
+            "kGloss": 2.0
+        }
+
+
+    ]
+}
