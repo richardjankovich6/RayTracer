@@ -11,6 +11,12 @@ void Triangle::findD() {
     d = -dot(normal, p1);
 };
 
+void Triangle::setNormal(Vector3<double> v) {
+    normal = normalize(v);
+    // this is a fucking thing
+    d = -dot(normal, p1);
+};
+
 bool Triangle::intersetRay(Point& p, const Ray ray) const {
     double vd = dot(normal, ray.direction());
     if (vd == 0) {

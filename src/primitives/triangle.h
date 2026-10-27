@@ -17,11 +17,13 @@ class Triangle : public Primitive {
 
     double d;
 
-    bool doubleSided = true;
+    bool doubleSided = false;
 
 public:
 
     Triangle() {};
+
+    void setNormal(const Vector3<double> v);
 
     Triangle(Point p1, Point p2, Point p3) : p1(p1), p2(p2), p3(p3) {
         findD();
