@@ -26,8 +26,8 @@ bool Triangle::intersetRay(Point& p, const Ray ray) const {
     if (t < 0) {
         return false;
     }
-
-    p = ray.origin() + ray.direction() * t;
+    
+    p = ray.at(t);
 
     bool dot1 = dot(normal, cross(p2 - p1, p - p1)) > 0;
     bool dot2 = dot(normal, cross(p3 - p2, p - p2)) > 0;
