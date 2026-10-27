@@ -12,15 +12,11 @@
 #include "camera.h"
 
 #include "primitives/primitive.h"
-#include "primitives/sphere.h"
-#include "primitives/triangle.h"
-
 #include "primitives/primitiveParser.h"
-
 
 #include "raytracer.h"
 
-using namespace std;
+// using namespace std;
 
 int MAXDEPTH = 20;
 
@@ -38,7 +34,8 @@ Camera declareCamera() {
 
 Light declareLight() {
     // create light
-    Vector3<double> directionToLight = Vector3<double>(1.0, 1.0, 1.0);
+    // Vector3<double> directionToLight = Vector3<double>(1.0, 1.0, 1.0);
+    Vector3<double> directionToLight = Vector3<double>(0.6, 0.8, 1.0);
     Color lightColor = Color(1.0, 1.0, 1.0);
     Color ambientLightColor = Color(0.3, 0.3, 0.3);
     Color backgroundColor = Color(0.04, 0.04, 0.04);
@@ -62,14 +59,13 @@ int main() {
     raytracer.primitives = primitives;
 
 
-    cout << clock() << "\n";
+    std::cout << clock() << "\n";
 
-    stringstream pic = raytracer.traceRays();
+    std::stringstream pic = raytracer.traceRays();
 
-    cout << "\n" << clock() << "\n";
+    std::cout << "\n" << clock() << "\n";
 
-
-    ofstream file("image.ppm");
+    std::ofstream file("image.ppm");
     file << pic.str();
     
     return 0;
