@@ -13,6 +13,12 @@
 
 #include "nlohmann/json.hpp" // https://github.com/nlohmann/json
 
+// using nlohmann::literals::operator ""_json;
+// using namespace nlohmann::literals;
+// using namespace nlohmann::json_literals;
+// using namespace nlohmann::literals::json_literals;
+using namespace nlohmann;
+
 using Json = nlohmann::json;
 
 // Forward declarations (assuming these exist in your code)
