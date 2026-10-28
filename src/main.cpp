@@ -3,6 +3,7 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
+#include <chrono>
 #include <vector>
 
 #include "vector3.h"
@@ -58,15 +59,15 @@ int main() {
     raytracer.setMaxDepth(MAXDEPTH);
     raytracer.primitives = primitives;
 
-
-    std::cout << clock() << "\n";
+    auto start = std::chrono::high_resolution_clock::now();
 
     std::stringstream pic = raytracer.traceRays();
-
-    std::cout << "\n" << clock() << "\n";
-
     std::ofstream file("image.ppm");
     file << pic.str();
+
+    auto stop = std::chrono::high_resolution_clock::now();
+    auto duration = duration_cast<std::chrono::milliseconds>(stop - start);
+    std::cout << "total duration in milliseconds: " << duration << std::endl;
     
     return 0;
 }

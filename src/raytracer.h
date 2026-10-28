@@ -18,7 +18,11 @@ class Raytracer {
     Camera camera;
     int maxDepth = 0;
 
-    void traceRaysTask(Color* &picArray, int heightStart, int heightEnd, int widthStart, int widthEnd) const;
+    void traceRaysTask(Color* picArray, int heightStart, int heightEnd, int widthStart, int widthEnd) const;
+
+    bool castShadowRay(const Ray ray, const int ignoredIndex) const;
+
+    Color castRay(const Ray ray, const Vector3<double> lookDirection, int depth = 0, int ignoredIndex = -1) const;
 
 public:
 
@@ -26,9 +30,6 @@ public:
 
     Raytracer() {};
 
-    bool castShadowRay(const Ray ray, const int ignoredIndex) const;
-
-    Color castRay(const Ray ray, const Vector3<double> lookDirection, int depth = 0, int ignoredIndex = -1) const;
 
     // void traceRays(std::stringstream& string) const;
     std::stringstream traceRays() const;

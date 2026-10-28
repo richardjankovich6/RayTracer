@@ -1,5 +1,6 @@
 #include "raytracer.h"
 #include<sstream>
+#include <thread>
 
 
 bool Raytracer::castShadowRay(const Ray ray, const int ignoredIndex) const {
@@ -55,7 +56,7 @@ Color Raytracer::castRay(const Ray ray, const Vector3<double> lookDirection, int
     return color;
 }
 
-void Raytracer::traceRaysTask(Color* &picArray, int heightStart, int heightEnd, int widthStart, int widthEnd) const {
+void Raytracer::traceRaysTask(Color* picArray, int heightStart, int heightEnd, int widthStart, int widthEnd) const {
     Vector3<double> lookDirection = unitVec(camera.lookFrom - camera.lookAt);
     Color c;
     Ray r;
@@ -72,7 +73,17 @@ void Raytracer::traceRaysTask(Color* &picArray, int heightStart, int heightEnd, 
 std::stringstream Raytracer::traceRays() const {
     Color* picArray = new Color[camera.width*camera.height];
 
-    traceRaysTask(picArray, 0, 0, camera.height, camera.width);
+    // int numThreads = 1;
+    int numThreads = 6;
+    std::thread* threads = new std::thread[numThreads];
+    int x = camera.width / numThreads;
+    for (int i = 0; i < numThreads; i++) {
+        threads[i] = std::thread(&Raytracer::traceRaysTask, this, picArray, 0, camera.height, i * x, (i + 1) * x);
+        std::cout << i << " " << i * x << " " << (i + 1) * x << std::endl;
+    }
+    for (int i = 0; i < numThreads; i++) {
+        threads[i].join();
+    }
 
     std::stringstream string;
     string << "P3\n" << camera.width << " " << camera.height << "\n255\n";
@@ -83,6 +94,7 @@ std::stringstream Raytracer::traceRays() const {
         string << '\n';
     }
 
+    delete[] threads;
     delete[] picArray;
 
     return string;
