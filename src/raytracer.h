@@ -18,6 +18,8 @@ class Raytracer {
     Camera camera;
     int maxDepth = 0;
 
+    void traceRaysTask(Color* &picArray, int heightStart, int heightEnd, int widthStart, int widthEnd) const;
+
 public:
 
     std::vector<Primitive*> primitives;

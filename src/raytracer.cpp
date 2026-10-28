@@ -55,21 +55,35 @@ Color Raytracer::castRay(const Ray ray, const Vector3<double> lookDirection, int
     return color;
 }
 
-std::stringstream Raytracer::traceRays() const {
-    std::stringstream string;
+void Raytracer::traceRaysTask(Color* &picArray, int heightStart, int heightEnd, int widthStart, int widthEnd) const {
     Vector3<double> lookDirection = unitVec(camera.lookFrom - camera.lookAt);
     Color c;
     Ray r;
-    Point p;
+    for (int h = heightStart; h < heightEnd; h++) {
+        for (int w = widthStart; w < widthEnd; w++) {
+            r = camera.makeRay(w, h);
+            c = castRay(r, lookDirection, 0);
+            picArray[w + h * camera.width] = c;
+        }
+    }
 
+}
+
+std::stringstream Raytracer::traceRays() const {
+    Color* picArray = new Color[camera.width*camera.height];
+
+    traceRaysTask(picArray, 0, 0, camera.height, camera.width);
+
+    std::stringstream string;
     string << "P3\n" << camera.width << " " << camera.height << "\n255\n";
     for (int h = 0; h < camera.height; h++) {
         for (int w = 0; w < camera.width; w++) {
-            r = camera.makeRay(w, h);
-            c = castRay(r, lookDirection, 0);
-            string << c;
+            string << picArray[w + h * camera.width];
         }
         string << '\n';
     }
+
+    delete[] picArray;
+
     return string;
 }
