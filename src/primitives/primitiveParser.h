@@ -23,7 +23,7 @@ class Light;
 
 class JsonPrimitiveParser {
 public:
-    static std::vector<Primitive*> parsePrimitives(const std::string& filename, const Light* light) {
+    static void parsePrimitives(std::vector<Primitive*>& primitives, const std::string& filename, const Light* light) {
         // Read the JSON file
         std::ifstream configFile(filename);
         if (!configFile.is_open()) {
@@ -43,7 +43,7 @@ public:
         }
 
         // std::vector<Primitive*> primitives;
-        std::vector<Primitive*> primitives;
+        // std::vector<Primitive*> primitives;
 
         for (const auto& primitiveJson : config["primitives"]) {
             try {
@@ -64,8 +64,6 @@ public:
                                          std::string(e.what()));
             }
         }
-
-        return primitives;
     }
 
 private:

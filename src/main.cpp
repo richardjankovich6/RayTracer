@@ -2,13 +2,12 @@
 
 #include <iostream>
 #include <fstream>
-#include<sstream>
+#include <sstream>
 #include <vector>
 
 #include "vector3.h"
 #include "color.h"
 #include "point.h"
-
 #include "camera.h"
 
 #include "primitives/primitive.h"
@@ -34,8 +33,8 @@ Camera declareCamera() {
 
 Light declareLight() {
     // create light
-    // Vector3<double> directionToLight = Vector3<double>(1.0, 1.0, 1.0);
-    Vector3<double> directionToLight = Vector3<double>(0.6, 0.8, 1.0);
+    Vector3<double> directionToLight = Vector3<double>(0.4, 1.0, 0.4);
+    // Vector3<double> directionToLight = Vector3<double>(0.6, 0.8, 1.0);
     Color lightColor = Color(1.0, 1.0, 1.0);
     Color ambientLightColor = Color(0.3, 0.3, 0.3);
     Color backgroundColor = Color(0.04, 0.04, 0.04);
@@ -47,9 +46,10 @@ int main() {
 
     Camera camera = declareCamera();
     Light light = declareLight();
+    std::vector<Primitive*> primitives;
 
     // std::vector<Primitive*> primitives = JsonPrimitiveParser::parsePrimitives("../scenes/testScene1.json", &light);
-    std::vector<Primitive*> primitives = JsonPrimitiveParser::parsePrimitives("../scenes/boxScene1.json", &light);
+    JsonPrimitiveParser::parsePrimitives(primitives, "../scenes/boxScene1.json", &light);
 
 
     Raytracer raytracer;
