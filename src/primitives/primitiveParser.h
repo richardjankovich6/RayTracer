@@ -9,6 +9,7 @@
 #include "primitive.h"
 #include "sphere.h"
 #include "triangle.h"
+#include "camera.h"
 
 
 #include "nlohmann/json.hpp" // https://github.com/nlohmann/json
@@ -29,6 +30,44 @@ class Light;
 
 class JsonPrimitiveParser {
 public:
+
+    static Camera parseCameraJson(const std::string& file) {
+
+        std::ifstream configFile(file);
+        if (!configFile.is_open()) {
+            throw std::runtime_error("Could not open config file: " + file);
+        }
+        Json config;
+        try {
+            config = Json::parse(configFile, nullptr, true, true);
+        } catch (const Json::exception& e) {
+            throw std::runtime_error("Invalid JSON in config file: " + std::string(e.what()));
+        }
+
+        if(!config.contains("camera")) {
+            throw std::runtime_error("json must contain \"camera\"");
+        }
+
+        auto camJson = config["camera"];
+        Point lookAt = Point(
+            camJson["lookAt"][0].get<double>(),
+            camJson["lookAt"][1].get<double>(),
+            camJson["lookAt"][2].get<double>());
+        Point lookFrom = Point(
+            camJson["lookFrom"][0].get<double>(),
+            camJson["lookFrom"][1].get<double>(),
+            camJson["lookFrom"][2].get<double>());
+        Vector3<double> lookUp = Vector3<double>(
+            camJson["lookFrom"][0].get<double>(),
+            camJson["lookFrom"][1].get<double>(),
+            camJson["lookFrom"][2].get<double>());
+        int width = camJson["width"].get<int>();
+        int height = camJson["height"].get<int>();
+        double fov = camJson["fov"].get<int>();
+        return Camera(lookAt, lookFrom, lookUp, width, height, fov);
+    }
+
+
     static void parsePrimitives(std::vector<Primitive*>& primitives, const std::string& filename, const Light* light) {
         // Read the JSON file
         std::ifstream configFile(filename);
@@ -47,9 +86,6 @@ public:
         if (!config.is_object() || !config.contains("primitives")) {
             throw std::runtime_error("Config file must contain a 'primitives' array");
         }
-
-        // std::vector<Primitive*> primitives;
-        // std::vector<Primitive*> primitives;
 
         for (const auto& primitiveJson : config["primitives"]) {
             try {
@@ -74,7 +110,7 @@ public:
 
 private:
     static Sphere* parseSphere(const Json& json, const Light* light) {
-        auto sphere = new Sphere();
+        Sphere* sphere = new Sphere();
 
         // Required properties
         if (!json.contains("center") || !json["center"].is_array() ||

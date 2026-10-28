@@ -4,21 +4,20 @@
 #include <fstream>
 #include <sstream>
 #include <chrono>
-#include <vector>
+// #include <vector>
 
 #include "vector3.h"
 #include "color.h"
 #include "point.h"
 #include "camera.h"
 
-#include "primitives/primitive.h"
+// #include "primitives/primitive.h"
 #include "primitives/primitiveParser.h"
 
 #include "raytracer.h"
 
-// using namespace std;
-
 int MAXDEPTH = 20;
+int NUMTHREADS = 6;
 
 Camera declareCamera() {
     // declare constants
@@ -47,17 +46,13 @@ int main() {
 
     Camera camera = declareCamera();
     Light light = declareLight();
-    std::vector<Primitive*> primitives;
-
-    // std::vector<Primitive*> primitives = JsonPrimitiveParser::parsePrimitives("../scenes/testScene1.json", &light);
-    JsonPrimitiveParser::parsePrimitives(primitives, "../scenes/boxScene1.json", &light);
-
 
     Raytracer raytracer;
     raytracer.setCamera(camera);
     raytracer.setLight(light);
     raytracer.setMaxDepth(MAXDEPTH);
-    raytracer.primitives = primitives;
+    raytracer.setNumThreads(NUMTHREADS);
+    JsonPrimitiveParser::parsePrimitives(raytracer.primitives, "../configs/scenes/boxScene1.json", &light);
 
     auto start = std::chrono::high_resolution_clock::now();
 
@@ -68,6 +63,9 @@ int main() {
     auto stop = std::chrono::high_resolution_clock::now();
     auto duration = duration_cast<std::chrono::milliseconds>(stop - start);
     std::cout << "total duration in milliseconds: " << duration << std::endl;
+
+    // std::cout << sizeof(Triangle) << std::endl;
+    // std::cout << sizeof(Sphere) << std::endl;
     
     return 0;
 }

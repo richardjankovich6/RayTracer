@@ -17,6 +17,8 @@ class Raytracer {
     Light light;
     Camera camera;
     int maxDepth = 0;
+    int numThreads = 1;
+    int numSamples = 1;
 
     void traceRaysTask(Color* picArray, int heightStart, int heightEnd, int widthStart, int widthEnd) const;
 
@@ -30,13 +32,13 @@ public:
 
     Raytracer() {};
 
-
-    // void traceRays(std::stringstream& string) const;
     std::stringstream traceRays() const;
 
     void setCamera(Camera c) { camera = c; }
     void setLight(Light l) { light = l; }
     void setMaxDepth(int i) { maxDepth = i; }
+    void setNumThreads (int i) { numThreads = i > 0 ? i : 1; }
+    void setNumSamples (int i) { numSamples = i > 0 ? i : 1; }
 
 };
 

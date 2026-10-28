@@ -74,7 +74,7 @@ std::stringstream Raytracer::traceRays() const {
     Color* picArray = new Color[camera.width*camera.height];
 
     // int numThreads = 1;
-    int numThreads = 6;
+    // int numThreads = 6;
     std::thread* threads = new std::thread[numThreads];
     int x = camera.width / numThreads;
     for (int i = 0; i < numThreads; i++) {

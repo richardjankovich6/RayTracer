@@ -26,7 +26,7 @@
         },
         {
             "type": "Sphere",
-            "center": [-1.5, 1.2, -2.3],
+            "center": [-3.5, 1.2, -2.3],
             "radius": 0.7,
             "kDiffuse": 0.7,
             "kSpecular": 0.2,
@@ -34,7 +34,7 @@
             "reflectiveness": 1.0,
             "diffuseColor": [1.0, 0.0, 0.7],
             "specularColor": [1.0, 1.0, 1.0],
-            "kGloss": 12.0
+            "kGloss": 64.0
         },
         {
             "type": "Sphere",
