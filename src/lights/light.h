@@ -1,6 +1,7 @@
 #pragma once
 
 #include "vector3.h"
+#include "point.h"
 #include "color.h"
 
 #ifndef LIGHT_H
@@ -13,9 +14,8 @@ struct Light {
 
     Color lightColor;
 
-    // Vector3<double> directionToLight;
 
-    Light(Color lightColor, Vector3<double> directionToLight = {1,0,0}, Color ambientLight = {50, 50, 50}, Color backgroundColor = {20, 20, 20})
+    Light(Color lightColor)
     : lightColor(lightColor) {}
     
     Light() {};
@@ -28,7 +28,7 @@ struct Light {
     inline Color getLightColor() const { return lightColor; }
     inline Color getAmbientLight() const { return ambientLight; }
     inline Color getBackgroundColor() const { return backgroundColor; }
-    virtual Vector3<double> getDirectionToLight() const = 0;
+    virtual Vector3<double> getDirectionToLight(const Point from) const = 0;
 
 };
 
