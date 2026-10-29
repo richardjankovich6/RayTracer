@@ -1,7 +1,7 @@
 #pragma once
 
 #include "color.h"
-#include "light.h"
+#include "lights/light.h"
 #include "vector3.h"
 #include "ray.h"
 // #include <algorithm>
@@ -68,7 +68,7 @@ public:
     inline Color getAmbientColor() const { return ambientColor; }
     inline void setAmbientColor(Color const val) { ambientColor = val; }
 
-    inline Color getBackgroundColor() const { return light->getBackgroundColor(); }
+    inline Color getBackgroundColor() const { return light->backgroundColor; }
 
     inline void setLight(const Light* l) { light = l; }
 

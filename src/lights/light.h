@@ -10,12 +10,12 @@ struct Light {
 
     Color lightColor;
     Color ambientLight;
-    Color backgroundColor;
+    static Color backgroundColor;
 
     Vector3<double> directionToLight;
 
     Light(Color lightColor, Vector3<double> directionToLight = {1,0,0}, Color ambientLight = {50, 50, 50}, Color backgroundColor = {20, 20, 20})
-    : lightColor(lightColor), ambientLight(ambientLight), backgroundColor(backgroundColor), directionToLight(directionToLight) {}
+    : lightColor(lightColor), ambientLight(ambientLight), directionToLight(directionToLight) {}
     
     Light() {};
 
@@ -30,5 +30,7 @@ struct Light {
     inline Vector3<double> getDirectionToLight() const { return directionToLight; }
 
 };
+
+// Light::backgroundColor = Color(0.0, 0.0, 0.0);
 
 #endif

@@ -10,9 +10,10 @@
 #include "color.h"
 #include "point.h"
 #include "camera.h"
+#include "lights/directionalLight.h"
 
 // #include "primitives/primitive.h"
-#include "primitives/primitiveParser.h"
+#include "utils/jsonParsingHelper.h"
 
 #include "raytracer.h"
 
@@ -31,28 +32,29 @@ Camera declareCamera() {
     return Camera(lookAt, lookFrom, lookUp, width, height, fov);
 }
 
-Light declareLight() {
+DirectionalLight declareLight() {
     // create light
     Vector3<double> directionToLight = Vector3<double>(0.4, 1.0, 0.4);
     // Vector3<double> directionToLight = Vector3<double>(0.6, 0.8, 1.0);
     Color lightColor = Color(1.0, 1.0, 1.0);
     Color ambientLightColor = Color(0.3, 0.3, 0.3);
     Color backgroundColor = Color(0.04, 0.04, 0.04);
-    return Light(lightColor, directionToLight, ambientLightColor, backgroundColor);
+    return DirectionalLight(lightColor, directionToLight, ambientLightColor, backgroundColor);
 }
 
 
 int main() {
 
-    Camera camera = declareCamera();
-    Light light = declareLight();
+    DirectionalLight light = declareLight();
+
+    Camera camera = JsonParsingHelper::parseCameraJson("../configs/camera.json");
 
     Raytracer raytracer;
     raytracer.setCamera(camera);
     raytracer.setLight(light);
     raytracer.setMaxDepth(MAXDEPTH);
     raytracer.setNumThreads(NUMTHREADS);
-    JsonPrimitiveParser::parsePrimitives(raytracer.primitives, "../configs/scenes/boxScene1.json", &light);
+    JsonParsingHelper::parsePrimitives(raytracer.primitives, "../configs/scenes/boxScene1.json", &light);
 
     auto start = std::chrono::high_resolution_clock::now();
 

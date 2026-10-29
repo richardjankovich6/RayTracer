@@ -6,9 +6,9 @@
 #include <stdexcept>
 
 
-#include "primitive.h"
-#include "sphere.h"
-#include "triangle.h"
+#include "primitives/primitive.h"
+#include "primitives/sphere.h"
+#include "primitives/triangle.h"
 #include "camera.h"
 
 
@@ -18,7 +18,7 @@
 // using namespace nlohmann::literals;
 // using namespace nlohmann::json_literals;
 // using namespace nlohmann::literals::json_literals;
-using namespace nlohmann;
+// using namespace nlohmann;
 
 using Json = nlohmann::json;
 
@@ -28,7 +28,7 @@ class Triangle;
 class Primitive;
 class Light;
 
-class JsonPrimitiveParser {
+class JsonParsingHelper {
 public:
 
     static Camera parseCameraJson(const std::string& file) {
