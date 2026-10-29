@@ -11,6 +11,7 @@
 #include "point.h"
 #include "camera.h"
 #include "lights/directionalLight.h"
+#include "lights/light.h"
 
 // #include "primitives/primitive.h"
 #include "utils/jsonParsingHelper.h"
@@ -19,18 +20,6 @@
 
 int MAXDEPTH = 20;
 int NUMTHREADS = 6;
-
-Camera declareCamera() {
-    // declare constants
-
-    Point lookAt = Point(0.0, 0.0, 0.0);
-    Point lookFrom = Point(0.0, 0.0, 3.0);
-    Vector3<double> lookUp = Vector3<double>(0.0, 1.0, 0.0);
-    constexpr int width = 1920;
-    constexpr int height = 1080;
-    constexpr double fov = 90.0;
-    return Camera(lookAt, lookFrom, lookUp, width, height, fov);
-}
 
 DirectionalLight declareLight() {
     // create light
@@ -42,7 +31,6 @@ DirectionalLight declareLight() {
     return DirectionalLight(lightColor, directionToLight, ambientLightColor, backgroundColor);
 }
 
-
 int main() {
 
     DirectionalLight light = declareLight();
@@ -51,7 +39,7 @@ int main() {
 
     Raytracer raytracer;
     raytracer.setCamera(camera);
-    raytracer.setLight(light);
+    raytracer.setLight(&light);
     raytracer.setMaxDepth(MAXDEPTH);
     raytracer.setNumThreads(NUMTHREADS);
     JsonParsingHelper::parsePrimitives(raytracer.primitives, "../configs/scenes/boxScene1.json", &light);

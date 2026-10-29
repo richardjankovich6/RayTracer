@@ -8,14 +8,15 @@
 
 struct Light {
 
-    Color lightColor;
-    Color ambientLight;
+    static Color ambientLight;
     static Color backgroundColor;
 
-    Vector3<double> directionToLight;
+    Color lightColor;
+
+    // Vector3<double> directionToLight;
 
     Light(Color lightColor, Vector3<double> directionToLight = {1,0,0}, Color ambientLight = {50, 50, 50}, Color backgroundColor = {20, 20, 20})
-    : lightColor(lightColor), ambientLight(ambientLight), directionToLight(directionToLight) {}
+    : lightColor(lightColor) {}
     
     Light() {};
 
@@ -27,7 +28,7 @@ struct Light {
     inline Color getLightColor() const { return lightColor; }
     inline Color getAmbientLight() const { return ambientLight; }
     inline Color getBackgroundColor() const { return backgroundColor; }
-    inline Vector3<double> getDirectionToLight() const { return directionToLight; }
+    virtual Vector3<double> getDirectionToLight() const = 0;
 
 };
 

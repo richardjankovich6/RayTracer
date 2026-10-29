@@ -34,10 +34,10 @@ Color Raytracer::castRay(const Ray ray, const Vector3<double> lookDirection, int
     }
 
     if (nearestPrimitiveIndex == -1) {
-        return light.getBackgroundColor();
+        return light->getBackgroundColor();
     }
 
-    bool inShadow = castShadowRay(Ray(nearestPoint, light.directionToLight), nearestPrimitiveIndex);
+    bool inShadow = castShadowRay(Ray(nearestPoint, light->getDirectionToLight()), nearestPrimitiveIndex);
 
     Color color = primitives[nearestPrimitiveIndex]->getColor(nearestPoint, lookDirection, inShadow);
 

@@ -7,7 +7,21 @@
 #ifndef DIRECTIONALLIGHT_H
 #define DIRECTIONALLIGHT_H
 
-using DirectionalLight = Light;
+// using DirectionalLight = Light;
+
+struct DirectionalLight : Light {
+
+    Vector3<double> directionToLight;
+
+    DirectionalLight(Color lightColor, Vector3<double> directionToLight = {1,0,0}, Color ambientLight = {50, 50, 50}, Color backgroundColor = {20, 20, 20})
+    :  Light(lightColor, ambientLight, backgroundColor), directionToLight(directionToLight) {}
+
+
+    virtual Vector3<double> getDirectionToLight() const { return directionToLight; }
+
+
+};
+
 
 // struct DirectionalLight : private Light {
 
