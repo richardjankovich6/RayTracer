@@ -4,10 +4,6 @@
 #include "lights/light.h"
 #include "vector3.h"
 #include "ray.h"
-// #include <algorithm>
-// #include <cmath>
-
-// class Ray;
 
 #ifndef PRIMITIVE_H
 #define PRIMITIVE_H
@@ -74,9 +70,6 @@ public:
 
     
 
-    // virtual bool intersetRay(Point& v, const Ray ray) const {
-    //     return false;
-    // };
     virtual bool intersetRay(Point& v, Ray ray) const = 0;
 
     virtual Color getColor(Point p, Vector3<double> v, bool inShadow) const {
@@ -86,8 +79,6 @@ public:
     virtual Vector3<double> getNormal(Point p) const {
         return Vector3<double>();
     }
-
-    // virtual Vector3<double> intersetRay(Ray ray) const = 0;
 };
 
 #endif

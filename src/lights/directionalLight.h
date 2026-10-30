@@ -14,11 +14,8 @@ struct DirectionalLight : Light {
     DirectionalLight(Color lightColor, Vector3<double> directionToLight = {1,0,0})
     : directionToLight(directionToLight), Light(lightColor) {}
 
-
-    virtual Vector3<double> getDirectionToLight(const Point ignored) const { return directionToLight; }
+    virtual Vector3<double> getDirectionToLight(const Point ignored = Point()) const { return directionToLight; }
 
 };
-
-
 
 #endif

@@ -28,7 +28,7 @@ struct Light {
     inline Color getLightColor() const { return lightColor; }
     inline Color getAmbientLight() const { return ambientLight; }
     inline Color getBackgroundColor() const { return backgroundColor; }
-    virtual Vector3<double> getDirectionToLight(const Point from) const = 0;
+    virtual Vector3<double> getDirectionToLight(const Point from = Point()) const = 0;
 
 };
 
