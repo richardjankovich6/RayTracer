@@ -1,8 +1,8 @@
 #pragma once
 
-#include "vector3.h"
-#include "point.h"
-#include "color.h"
+#include "../vector3.h"
+#include "../point.h"
+#include "../color.h"
 
 #ifndef LIGHT_H
 #define LIGHT_H

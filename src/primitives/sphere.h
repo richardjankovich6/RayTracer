@@ -1,10 +1,10 @@
 #pragma once
 
 #include "primitive.h"
-#include "ray.h"
-#include "point.h"
-#include "vector3.h"
-#include "color.h"
+#include "../vector3.h"
+#include "../ray.h"
+#include "../point.h"
+#include "../color.h"
 
 
 #ifndef SPHERE_H

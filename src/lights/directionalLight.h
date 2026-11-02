@@ -1,7 +1,7 @@
 #pragma once
 
-#include "vector3.h"
-#include "color.h"
+#include "../vector3.h"
+#include "../color.h"
 #include "light.h"
 
 #ifndef DIRECTIONALLIGHT_H

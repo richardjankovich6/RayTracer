@@ -6,13 +6,13 @@
 #include <stdexcept>
 
 
-#include "primitives/primitive.h"
-#include "primitives/sphere.h"
-#include "primitives/triangle.h"
-#include "camera.h"
+#include "../primitives/primitive.h"
+#include "../primitives/sphere.h"
+#include "../primitives/triangle.h"
+#include "../camera.h"
 
 
-#include "nlohmann/json.hpp" // https://github.com/nlohmann/json
+#include "../nlohmann/json.hpp" // https://github.com/nlohmann/json
 
 // using nlohmann::literals::operator ""_json;
 // using namespace nlohmann::literals;

@@ -1,9 +1,9 @@
 #pragma once
 
-#include "color.h"
-#include "lights/light.h"
-#include "vector3.h"
-#include "ray.h"
+#include "../color.h"
+#include "../lights/light.h"
+#include "../vector3.h"
+#include "../ray.h"
 
 #ifndef PRIMITIVE_H
 #define PRIMITIVE_H
