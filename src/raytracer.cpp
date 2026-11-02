@@ -80,17 +80,21 @@ void Raytracer::traceRaysTaskMutex(Color* picArray, int heightStart, int heightE
     int curW = 0;
     while (currentWidth < camera.width) {
         editCurrentWidth.lock();
-        curW = currentWidth++;
+        curW = currentWidth;
+        currentWidth += threadIncrimentSize;
         editCurrentWidth.unlock();
-        for (int h = 0; h < camera.height; h++) {
-             c = Color(0.0,0.0,0.0);
-            for (int i = 0; i < numSamples; i++) {
-                // r = camera.makeRay(w, h);
-                r = camera.makeRandomRay(curW, h);
-                c += castRay(r, lookDirection, 0);
+        for (int w = curW; w < curW + threadIncrimentSize; w++) {
+            for (int h = 0; h < camera.height; h++) {
+                c = Color(0.0,0.0,0.0);
+                for (int i = 0; i < numSamples; i++) {
+                    // r = camera.makeRay(w, h);
+                    r = camera.makeRandomRay(w, h);
+                    c += castRay(r, lookDirection, 0);
+                }
+                picArray[w + h * camera.width] = c / numSamples;
             }
-            picArray[curW + h * camera.width] = c / numSamples;
         }
+        
     }
 }
 
@@ -105,7 +109,6 @@ std::stringstream Raytracer::traceRays() {
     for (int i = 0; i < numThreads; i++) {
         // threads[i] = std::jthread(&Raytracer::traceRaysTask, this, picArray, 0, camera.height, i * x, (i + 1) * x);
         threads[i] = std::jthread(&Raytracer::traceRaysTaskMutex, this, picArray, 0, camera.height);
-        std::cout << i << " " << i * x << " " << (i + 1) * x << std::endl;
     }
     for (int i = 0; i < numThreads; i++) {
         threads[i].join();

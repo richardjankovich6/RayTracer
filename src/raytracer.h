@@ -22,6 +22,7 @@ class Raytracer {
     int maxDepth = 1;
     int numThreads = 1;
     int numSamples = 1;
+    int threadIncrimentSize = 10;
 
     std::mutex editCurrentWidth;
     int currentWidth = 0;
