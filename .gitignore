@@ -1,2 +1,4 @@
 build/
 RayTracer.code-workspace
+
+*.cache/
