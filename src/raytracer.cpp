@@ -1,7 +1,7 @@
 #include "raytracer.h"
+#include <iostream>
 #include<sstream>
 #include <thread>
-
 
 bool Raytracer::castShadowRay(const Ray ray, const int ignoredIndex) const {
     for (int i = 0; i < primitives.size(); i++) {
@@ -56,15 +56,32 @@ Color Raytracer::castRay(const Ray ray, const Vector3<double> lookDirection, int
     return color;
 }
 
+
+
 void Raytracer::traceRaysTask(Color* picArray, int heightStart, int heightEnd, int widthStart, int widthEnd) const {
     Vector3<double> lookDirection = unitVec(camera.lookFrom - camera.lookAt);
     Color c;
     Ray r;
+
+    // double tempW, tempH;
     for (int h = heightStart; h < heightEnd; h++) {
         for (int w = widthStart; w < widthEnd; w++) {
-            r = camera.makeRay(w, h);
-            c = castRay(r, lookDirection, 0);
-            picArray[w + h * camera.width] = c;
+            c = Color(0.0,0.0,0.0);
+            for (int i = 0; i < numSamples; i++) {
+                // tempH = getRandom(static_cast<double>(h) - camera.halfPixelHeight, static_cast<double>(h) + camera.halfPixelHeight);
+                // tempW = getRandom(static_cast<double>(w) - camera.halfPixelWidth, static_cast<double>(w) + camera.halfPixelWidth);
+
+                // std::cout << tempH <<  " " << tempW << " : "; 
+                // r = camera.makeRay(w, h);
+                r = camera.makeRandomRay(w, h);
+                c += castRay(r, lookDirection, 0);
+
+                // std::cout << c << " : ";
+
+            }
+            // std::cout << std::endl;
+            picArray[w + h * camera.width] = c / numSamples;
+            // std::cout << std::endl << c << " : " << c / numSamples << std::endl;
         }
     }
 
@@ -73,8 +90,8 @@ void Raytracer::traceRaysTask(Color* picArray, int heightStart, int heightEnd, i
 std::stringstream Raytracer::traceRays() const {
     Color* picArray = new Color[camera.width*camera.height];
 
-    // int numThreads = 1;
-    // int numThreads = 6;
+    // traceRaysTask(picArray, 300, camera.height, 300, camera.width);
+
     std::thread* threads = new std::thread[numThreads];
     int x = camera.width / numThreads;
     for (int i = 0; i < numThreads; i++) {
@@ -84,6 +101,7 @@ std::stringstream Raytracer::traceRays() const {
     for (int i = 0; i < numThreads; i++) {
         threads[i].join();
     }
+    delete[] threads;
 
     std::stringstream string;
     string << "P3\n" << camera.width << " " << camera.height << "\n255\n";
@@ -94,7 +112,7 @@ std::stringstream Raytracer::traceRays() const {
         string << '\n';
     }
 
-    delete[] threads;
+    
     delete[] picArray;
 
     return string;

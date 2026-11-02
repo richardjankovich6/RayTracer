@@ -84,22 +84,13 @@ inline Vector3<A> operator*(const Vector3<A>& v, B t) {
 
 template<typename A, typename B>
 inline Vector3<A> operator/(const Vector3<A>& v, B t) {
-	return (1 / t) * v;
+	return Vector3<A>(v.vec[0] / t, v.vec[1] / t, v.vec[2] / t);
+	// return (1 / t) * v;
 };
 
 template<typename A, typename B>
 inline Vector3<A> operator/(B t, const Vector3<A>& v) {
 	return Vector3<A>(t / v.vec[0], t / v.vec[1], t / v.vec[2]);
-};
-
-template<typename T>
-inline Vector3<T> operator/(const Vector3<T>& v, double t) {
-	return (1 / t) * v;
-};
-
-// template<typename T>
-inline Vector3<> operator/(const Vector3<>& v, int t) {
-	return (1 / t) * v;
 };
 
 template<typename A, typename B>
@@ -109,7 +100,6 @@ inline double dot(const Vector3<A>& u, const Vector3<B>& v) {
 		+ u.vec[2] * v.vec[2];
 };
 
-// template<typename A, typename B>
 template<typename A>
 inline Vector3<A> cross(const Vector3<A>& u, const Vector3<A>& v) {
 	return Vector3<A>(u.vec[1] * v.vec[2] - u.vec[2] * v.vec[1],

@@ -20,7 +20,7 @@ class Raytracer {
     Camera camera;
     int maxDepth = 0;
     int numThreads = 1;
-    int numSamples = 1;
+    int numSamples = 15;
 
     void traceRaysTask(Color* picArray, int heightStart, int heightEnd, int widthStart, int widthEnd) const;
 

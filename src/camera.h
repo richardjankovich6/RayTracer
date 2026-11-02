@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cmath>
+#include <random>
 
 #include "vector3.h"
 #include "point.h"
@@ -49,6 +50,24 @@ struct Camera {
     Ray makeRay(int w, int h) const {
         double x = -widthExtent + halfPixelWidth * (2 * static_cast<double>(w) + 1.0);
         double y = heightExtent - halfPixelHeight * (2 * static_cast<double>(h) + 1.0);
+        Vector3<double> direction = Vector3<double>(x, y, lookAt.z()) - lookFrom;
+
+        return Ray(lookFrom, unitVec(direction));
+    }
+
+    static inline double randomDouble() {
+        return std::rand() / (RAND_MAX + 1.0);
+    }
+
+    inline double getRandom(double min, double max) {
+        return min + (max - min) * randomDouble();
+    }
+
+    Ray makeRandomRay(int w, int h) const {;
+        double x = -widthExtent + halfPixelWidth * (2 * static_cast<double>(w) + randomDouble());
+        double y = heightExtent - halfPixelHeight * (2 * static_cast<double>(h) + randomDouble());
+
+        // std::cout << x << " " << y << " : ";
 
         Vector3<double> direction = Vector3<double>(x, y, lookAt.z()) - lookFrom;
 
