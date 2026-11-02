@@ -56,46 +56,55 @@ Color Raytracer::castRay(const Ray ray, const Vector3<double> lookDirection, int
     return color;
 }
 
-
-
 void Raytracer::traceRaysTask(Color* picArray, int heightStart, int heightEnd, int widthStart, int widthEnd) const {
-    Vector3<double> lookDirection = unitVec(camera.lookFrom - camera.lookAt);
     Color c;
     Ray r;
 
-    // double tempW, tempH;
     for (int h = heightStart; h < heightEnd; h++) {
         for (int w = widthStart; w < widthEnd; w++) {
             c = Color(0.0,0.0,0.0);
             for (int i = 0; i < numSamples; i++) {
-                // tempH = getRandom(static_cast<double>(h) - camera.halfPixelHeight, static_cast<double>(h) + camera.halfPixelHeight);
-                // tempW = getRandom(static_cast<double>(w) - camera.halfPixelWidth, static_cast<double>(w) + camera.halfPixelWidth);
-
-                // std::cout << tempH <<  " " << tempW << " : "; 
                 // r = camera.makeRay(w, h);
                 r = camera.makeRandomRay(w, h);
                 c += castRay(r, lookDirection, 0);
-
-                // std::cout << c << " : ";
-
             }
-            // std::cout << std::endl;
             picArray[w + h * camera.width] = c / numSamples;
-            // std::cout << std::endl << c << " : " << c / numSamples << std::endl;
         }
     }
-
 }
 
-std::stringstream Raytracer::traceRays() const {
+void Raytracer::traceRaysTaskMutex(Color* picArray, int heightStart, int heightEnd) {
+    Color c;
+    Ray r;
+
+    int curW = 0;
+    while (currentWidth < camera.width) {
+        editCurrentWidth.lock();
+        curW = currentWidth++;
+        editCurrentWidth.unlock();
+        for (int h = 0; h < camera.height; h++) {
+             c = Color(0.0,0.0,0.0);
+            for (int i = 0; i < numSamples; i++) {
+                // r = camera.makeRay(w, h);
+                r = camera.makeRandomRay(curW, h);
+                c += castRay(r, lookDirection, 0);
+            }
+            picArray[curW + h * camera.width] = c / numSamples;
+        }
+    }
+}
+
+std::stringstream Raytracer::traceRays() {
+    lookDirection = unitVec(camera.lookFrom - camera.lookAt);
     Color* picArray = new Color[camera.width*camera.height];
 
     // traceRaysTask(picArray, 300, camera.height, 300, camera.width);
 
-    std::thread* threads = new std::thread[numThreads];
+    std::jthread* threads = new std::jthread[numThreads];
     int x = camera.width / numThreads;
     for (int i = 0; i < numThreads; i++) {
-        threads[i] = std::thread(&Raytracer::traceRaysTask, this, picArray, 0, camera.height, i * x, (i + 1) * x);
+        // threads[i] = std::jthread(&Raytracer::traceRaysTask, this, picArray, 0, camera.height, i * x, (i + 1) * x);
+        threads[i] = std::jthread(&Raytracer::traceRaysTaskMutex, this, picArray, 0, camera.height);
         std::cout << i << " " << i * x << " " << (i + 1) * x << std::endl;
     }
     for (int i = 0; i < numThreads; i++) {

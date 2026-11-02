@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vector>
+#include <mutex>
 
 #include "vector3.h"
 #include "color.h"
@@ -18,11 +19,17 @@ class Raytracer {
 
     Light* light;
     Camera camera;
-    int maxDepth = 0;
+    int maxDepth = 1;
     int numThreads = 1;
-    int numSamples = 15;
+    int numSamples = 1;
+
+    std::mutex editCurrentWidth;
+    int currentWidth = 0;
+
+    Vector3<double> lookDirection;
 
     void traceRaysTask(Color* picArray, int heightStart, int heightEnd, int widthStart, int widthEnd) const;
+    void traceRaysTaskMutex(Color* picArray, int heightStart, int heightEnd);
 
     bool castShadowRay(const Ray ray, const int ignoredIndex) const;
 
@@ -34,7 +41,7 @@ public:
 
     Raytracer() {};
 
-    std::stringstream traceRays() const;
+    std::stringstream traceRays();
 
     void setCamera(Camera c) { camera = c; }
     void setLight(Light* l) { light = l; }

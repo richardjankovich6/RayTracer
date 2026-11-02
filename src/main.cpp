@@ -4,22 +4,20 @@
 #include <fstream>
 #include <sstream>
 #include <chrono>
-// #include <vector>
 
 #include "vector3.h"
 #include "color.h"
-#include "point.h"
 #include "camera.h"
 #include "lights/directionalLight.h"
 #include "lights/light.h"
 
-// #include "primitives/primitive.h"
 #include "utils/jsonParsingHelper.h"
 
 #include "raytracer.h"
 
 int MAXDEPTH = 20;
 int NUMTHREADS = 6;
+int NUMSAMPLES = 5;
 
 DirectionalLight declareLight() {
     // create light
@@ -50,6 +48,7 @@ int main() {
     // raytracer.setLight(&light2);
     raytracer.setMaxDepth(MAXDEPTH);
     raytracer.setNumThreads(NUMTHREADS);
+    raytracer.setNumSamples(NUMSAMPLES);
     JsonParsingHelper::parsePrimitives(raytracer.primitives, "../configs/scenes/boxScene1.json", &light);
 
     auto start = std::chrono::high_resolution_clock::now();
