@@ -9,6 +9,7 @@
 #include "color.h"
 #include "camera.h"
 #include "lights/directionalLight.h"
+#include "lights/pointLight.h"
 #include "lights/light.h"
 
 #include "utils/jsonParsingHelper.h"
@@ -31,17 +32,22 @@ int main() {
     Light::ambientLight = Color(0.3, 0.3, 0.3);
     Light::backgroundColor = Color(0.04, 0.04, 0.04);
 
-    DirectionalLight light = declareLight();
+    DirectionalLight dlight = declareLight();
+
+
+    PointLight plight = PointLight(Color(1.0, 1.0, 0.0), Point(0.0,2.0,-1.0), 100.0);
+
+    Light* light = &dlight;
 
     Camera camera = JsonParsingHelper::parseCameraJson("../configs/camera.json");
 
     Raytracer raytracer;
     raytracer.setCamera(camera);
-    raytracer.setLight(&light);
+    raytracer.setLight(light);
     raytracer.setMaxDepth(MAXDEPTH);
     raytracer.setNumThreads(NUMTHREADS);
     raytracer.setNumSamples(NUMSAMPLES);
-    JsonParsingHelper::parsePrimitives(raytracer.primitives, "../configs/scenes/boxScene1.json", &light);
+    JsonParsingHelper::parsePrimitives(raytracer.primitives, "../configs/scenes/boxScene1.json", light);
 
     auto start = std::chrono::high_resolution_clock::now();
 
