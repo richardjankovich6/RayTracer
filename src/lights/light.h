@@ -13,10 +13,11 @@ struct Light {
     static Color backgroundColor;
 
     Color lightColor;
+    double intensity = 1.0;
 
 
-    Light(Color lightColor)
-    : lightColor(lightColor) {}
+    Light(Color lightColor, double intensity = 1.0)
+    : lightColor(lightColor), intensity(intensity) {}
     
     Light() {};
 
@@ -26,8 +27,6 @@ struct Light {
     Light &operator=(Light &&) = default;
 
     virtual Color getLightColor(const Point from = Point()) const { return lightColor; }
-    // static Color getAmbientLight() const { return ambientLight; }
-    // static Color getBackgroundColor() const { return backgroundColor; }
     virtual Vector3<double> getDirectionToLight(const Point from = Point()) const = 0;
 
 };
