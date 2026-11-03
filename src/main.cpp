@@ -35,8 +35,8 @@ int main() {
     DirectionalLight dlight = declareLight();
 
 
-    // PointLight plight = PointLight(Color(0.5, 0.8, 0.2), Point(0.0,2.0,1.0), 100.0);
-    PointLight plight = PointLight(Color(1.0, 1.0, 1.0), Point(0.0,2.0,1.0), 100.0);
+    PointLight plight = PointLight(Color(0.5, 0.8, 0.2), Point(-3.0,-3.0,1.0), 100.0);
+    // PointLight plight = PointLight(Color(1.0, 1.0, 1.0), Point(0.0,2.0,1.0), 100.0);
 
     Light* light = &plight;
 
