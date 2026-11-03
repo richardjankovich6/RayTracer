@@ -13,7 +13,7 @@ struct Light {
     static Color backgroundColor;
 
     Color lightColor;
-    double intensity = 1.0;
+    double intensity;
 
 
     Light(Color lightColor, double intensity = 1.0)
