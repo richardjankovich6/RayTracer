@@ -41,8 +41,8 @@ public:
 
     bool intersetRay(Point& p, const Ray ray) const override;
 
-    virtual Color getColor(Point p, Vector3<double> v, bool inShadow) const override {
-        return phongShading(normal, v, inShadow);
+    virtual Color getColor(Point p, Vector3<double> v, const Light* light, bool inShadow) const override {
+        return phongShading(normal, v, light, inShadow);
     }
     
 };

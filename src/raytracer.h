@@ -17,7 +17,7 @@ class Light;
 
 class Raytracer {
 
-    Light* light;
+    // Light* light;
     Camera camera;
     int maxDepth = 1;
     int numThreads = 1;
@@ -39,13 +39,14 @@ class Raytracer {
 public:
 
     std::vector<Primitive*> primitives;
+    std::vector<Light*> lights;
 
     Raytracer() {};
 
     std::stringstream traceRays();
 
     void setCamera(Camera c) { camera = c; }
-    void setLight(Light* l) { light = l; }
+    // void setLight(Light* l) { light = l; }
     void setMaxDepth(int i) { maxDepth = i; }
     void setNumThreads (int i) { numThreads = i > 0 ? i : 1; }
     void setNumSamples (int i) { numSamples = i > 0 ? i : 1; }

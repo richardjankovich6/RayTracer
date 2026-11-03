@@ -1,7 +1,7 @@
 #include "primitive.h"
 
-Color Primitive::phongShading(Vector3<double> normal, Vector3<double> lookDirection, bool inShadow) const {
-    Color aColor = light->getAmbientLight() * kValues.z() * diffuseColor;
+Color Primitive::phongShading(Vector3<double> normal, Vector3<double> lookDirection, const Light* light, bool inShadow) const {
+    Color aColor = Light::ambientLight * kValues.z() * diffuseColor;
     if (inShadow) {
         return aColor;
     }

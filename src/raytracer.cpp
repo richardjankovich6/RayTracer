@@ -34,12 +34,24 @@ Color Raytracer::castRay(const Ray ray, const Vector3<double> lookDirection, int
     }
 
     if (nearestPrimitiveIndex == -1) {
-        return light->getBackgroundColor();
+        return Light::backgroundColor;
     }
 
-    bool inShadow = castShadowRay(Ray(nearestPoint, light->getDirectionToLight()), nearestPrimitiveIndex);
+    int totalLights = lights.size();
 
-    Color color = primitives[nearestPrimitiveIndex]->getColor(nearestPoint, lookDirection, inShadow);
+    Color color = Color();
+
+    for (int i = 0; i < totalLights; i++) {
+        bool inShadow = castShadowRay(Ray(nearestPoint, lights[i]->getDirectionToLight()), nearestPrimitiveIndex);
+
+        color += primitives[nearestPrimitiveIndex]->getColor(nearestPoint, lookDirection, lights[i], inShadow);
+    }
+
+    color /= totalLights;
+
+    // bool inShadow = castShadowRay(Ray(nearestPoint, light->getDirectionToLight()), nearestPrimitiveIndex);
+
+    // Color color = primitives[nearestPrimitiveIndex]->getColor(nearestPoint, lookDirection, inShadow);
 
     if (depth < maxDepth && primitives[nearestPrimitiveIndex]->getReflectiveness() > 0) {
     // if (depth < MAXDEPTH) {

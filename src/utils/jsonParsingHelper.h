@@ -68,7 +68,7 @@ public:
     }
 
 
-    static void parsePrimitives(std::vector<Primitive*>& primitives, const std::string& filename, const Light* light) {
+    static void parsePrimitives(std::vector<Primitive*>& primitives, const std::string& filename) {
         // Read the JSON file
         std::ifstream configFile(filename);
         if (!configFile.is_open()) {
@@ -90,11 +90,11 @@ public:
         for (const auto& primitiveJson : config["primitives"]) {
             try {
                 if (primitiveJson.contains("type") && primitiveJson["type"] == "Sphere") {
-                    Sphere* sphere = parseSphere(primitiveJson, light);
+                    Sphere* sphere = parseSphere(primitiveJson);
                     primitives.push_back(sphere);
                 }
                 else if (primitiveJson.contains("type") && primitiveJson["type"] == "Triangle") {
-                    Triangle* tri = parseTriangle(primitiveJson, light);
+                    Triangle* tri = parseTriangle(primitiveJson);
                     primitives.push_back(tri);
                 }
                 else {
@@ -109,7 +109,7 @@ public:
     }
 
 private:
-    static Sphere* parseSphere(const Json& json, const Light* light) {
+    static Sphere* parseSphere(const Json& json) {
         Sphere* sphere = new Sphere();
 
         // Required properties
@@ -164,12 +164,12 @@ private:
         sphere->setReflectiveness(reflectiveness);
 
 
-        sphere->setLight(light);
+        // sphere->setLight(light);
 
         return sphere;
     }
 
-    static Triangle* parseTriangle(const Json& json, const Light* light) {
+    static Triangle* parseTriangle(const Json& json) {
 
         // Required properties - three points
         if (!json.contains("points") || !json["points"].is_array() ||
@@ -242,7 +242,7 @@ private:
         triangle->setKGloss(kGloss);
 
         // Set light
-        triangle->setLight(light);
+        // triangle->setLight(light);
 
         return triangle;
     }

@@ -22,19 +22,19 @@ protected:
     Color specularColor;
     Color ambientColor;
 
-    const Light *light;
+    // const Light *light;
 
 public:
 
-    Primitive(double kDiffuse, double kSpecular, double kAmbient, double kGloss, double reflectiveness, Color diffuseColor, Color specularColor, Color ambientColor, const Light* light)
-    : kGloss(kGloss), reflectiveness(reflectiveness), diffuseColor(diffuseColor), specularColor(specularColor), ambientColor(ambientColor), light(light) {
+    Primitive(double kDiffuse, double kSpecular, double kAmbient, double kGloss, double reflectiveness, Color diffuseColor, Color specularColor, Color ambientColor)
+    : kGloss(kGloss), reflectiveness(reflectiveness), diffuseColor(diffuseColor), specularColor(specularColor), ambientColor(ambientColor) {
         setKValues(kDiffuse, kSpecular, kAmbient);
     }
     
     Primitive() {};
     virtual ~Primitive() = default;
 
-    Color phongShading(Vector3<double> normal, Vector3<double> lookDirection, bool inShadow) const;
+    Color phongShading(Vector3<double> normal, Vector3<double> lookDirection, const Light* light, bool inShadow) const;
 
     inline void setKValues(float d, float s, float a) {
         kValues = unitVec<float>({d, s, a});
@@ -64,15 +64,15 @@ public:
     inline Color getAmbientColor() const { return ambientColor; }
     inline void setAmbientColor(Color const val) { ambientColor = val; }
 
-    inline Color getBackgroundColor() const { return light->backgroundColor; }
+    inline Color getBackgroundColor() const { return Light::backgroundColor; }
 
-    inline void setLight(const Light* l) { light = l; }
+    // inline void setLight(const Light* l) { light = l; }
 
     
 
     virtual bool intersetRay(Point& v, Ray ray) const = 0;
 
-    virtual Color getColor(Point p, Vector3<double> v, bool inShadow) const {
+    virtual Color getColor(Point p, Vector3<double> v, const Light* light, bool inShadow) const {
         return getBackgroundColor();
     }
 
