@@ -47,7 +47,7 @@ Color Raytracer::castRay(const Ray ray, const Vector3<double> lookDirection, int
         color += primitives[nearestPrimitiveIndex]->getColor(nearestPoint, lookDirection, lights[i], inShadow);
     }
 
-    color /= totalLights;
+    // color /= totalLights;
 
     // bool inShadow = castShadowRay(Ray(nearestPoint, light->getDirectionToLight()), nearestPrimitiveIndex);
 
