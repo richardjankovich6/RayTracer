@@ -22,9 +22,7 @@ int NUMSAMPLES = 5;
 DirectionalLight declareLight() {
     // create light
     Vector3<double> directionToLight = Vector3<double>(0.4, 1.0, 0.4);
-    // Vector3<double> directionToLight = Vector3<double>(0.6, 0.8, 1.0);
     Color lightColor = Color(1.0, 1.0, 1.0);
-    // Color lightColor = Color(0.8, 0.8, 0.8);
     return DirectionalLight(lightColor, directionToLight);
 }
 
@@ -35,17 +33,11 @@ int main() {
 
     DirectionalLight light = declareLight();
 
-    Vector3<double> directionToLight = Vector3<double>(-1.0, 0.9, 0.4);
-    Color lightColor = Color(0.8, 0.8, 0.8);
-    DirectionalLight light2 = DirectionalLight(lightColor, directionToLight);
-
-
     Camera camera = JsonParsingHelper::parseCameraJson("../configs/camera.json");
 
     Raytracer raytracer;
     raytracer.setCamera(camera);
     raytracer.setLight(&light);
-    // raytracer.setLight(&light2);
     raytracer.setMaxDepth(MAXDEPTH);
     raytracer.setNumThreads(NUMTHREADS);
     raytracer.setNumSamples(NUMSAMPLES);
