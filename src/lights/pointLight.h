@@ -17,7 +17,7 @@ struct PointLight : Light {
     PointLight(Color lightColor, Point location, double intensity = 1.0)
     : location(location), Light(lightColor, intensity) {}
 
-    virtual Vector3<double> getDirectionToLight(const Point from) const { return normalize(location - from); }
+    virtual Vector3<double> getDirectionToLight(const Point from) const override { return normalize(location - from); }
 
     virtual Color getLightColor(const Point from) const override {
         Vector3<double> dif = from - location;
