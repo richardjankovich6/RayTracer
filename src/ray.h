@@ -16,7 +16,7 @@ public:
 
 private:
     Point orig; // origin
-    Vector3<> dir; // direection
+    Vector3<> dir; // direction
 };
 
 // Ray castRay(const Point& origin, const Vector3<>& direction) {

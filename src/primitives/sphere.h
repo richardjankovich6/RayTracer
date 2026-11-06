@@ -1,0 +1,60 @@
+#pragma once
+
+#include "primitive.h"
+#include "../vector3.h"
+#include "../ray.h"
+#include "../point.h"
+#include "../color.h"
+
+
+#ifndef SPHERE_H
+#define SPHERE_H
+
+
+class Sphere : public Primitive {
+
+private:
+
+    Point center;
+    double radius;
+
+public:
+
+    Sphere() : Primitive() {};
+
+    Sphere(Vector3<double> center, double radius) : center(center), radius(radius), Primitive() {}
+
+    Sphere(Vector3<double> Icenter, double Iradius, float IkDiffuse, float IkSpecular, float IkAmbient, double IkGloss, Color IdiffuseColor, Color IspecularColor, Color IambientColor) {
+        center = Icenter;
+        radius = Iradius;
+        setKValues(IkDiffuse, IkSpecular, IkAmbient);
+        kGloss = IkGloss;
+        diffuseColor = IdiffuseColor;
+        specularColor = IspecularColor;
+        ambientColor = IambientColor;
+    }
+
+    inline Vector3<double> getReflectVec(Vector3<double> normal, Vector3<double> directionToLight) {
+        return unitVec(2 * normal * dot(normal, directionToLight) - directionToLight);
+    }
+
+    Vector3<double> getCenter() const { return center; }
+    void setCenter(Vector3<double> const val) { center = val; }
+
+    double getRadius() const { return radius; }
+    void setRadius(double const val) { radius = val; }
+
+    bool intersetRay(Point& p, const Ray ray) const override;
+
+    virtual Color getColor(Point p, Vector3<double> v, const Light* light, bool inShadow) const override {
+        Vector3 normal = (p - center) / radius;
+        return phongShading(normal, v, light, inShadow);
+    }
+
+    Vector3<double> getNormal(Point p) const override {
+        return (p - center) / radius;
+    }
+
+};
+
+#endif
