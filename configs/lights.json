@@ -1,0 +1,23 @@
+{
+    "lights": [
+        {
+            "type": "DirectionalLight",
+            "directionToLight": [0.4, 1.0, 0.4],
+            "color": [1.0, 1.0, 1.0]
+        },
+        {
+            "type": "PointLight",
+            "location": [-3.0, -3.0, 1.0],
+            "color": [1.0, 1.0, 1.0],
+            "intensity": 11.0
+        },
+        {
+            "type": "PointLight",
+            "location": [-1.2, 0.2, -0.4],
+            "color": [0.0, 20.0, 1.0],
+            "intensity": 80.0
+        }
+    ],
+    "ambientLight": [0.3, 0.3, 0.3],
+    "backgroundColor": [0.04, 0.04, 0.04]
+}

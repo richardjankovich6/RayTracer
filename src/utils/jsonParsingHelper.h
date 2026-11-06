@@ -9,10 +9,14 @@
 #include "../primitives/primitive.h"
 #include "../primitives/sphere.h"
 #include "../primitives/triangle.h"
+#include "../lights/light.h"
+#include "../lights/pointLight.h"
+#include "../lights/directionalLight.h"
 #include "../camera.h"
 
 
 #include "../nlohmann/json.hpp" // https://github.com/nlohmann/json
+#include "color.h"
 
 // using nlohmann::literals::operator ""_json;
 // using namespace nlohmann::literals;
@@ -21,12 +25,6 @@
 // using namespace nlohmann;
 
 using Json = nlohmann::json;
-
-// Forward declarations (assuming these exist in your code)
-class Sphere;
-class Triangle;
-class Primitive;
-class Light;
 
 class JsonParsingHelper {
 public:
@@ -65,6 +63,59 @@ public:
         int height = camJson["height"].get<int>();
         double fov = camJson["fov"].get<int>();
         return Camera(lookAt, lookFrom, lookUp, width, height, fov);
+    }
+
+    static void parseLights(std::vector<Light*>& lights, const std::string& filename) {
+        // Read the JSON file
+        std::ifstream configFile(filename);
+        if (!configFile.is_open()) {
+            throw std::runtime_error("Could not open config file: " + filename);
+        }
+
+        Json config;
+        try {
+            config = Json::parse(configFile, nullptr, true, true);
+        } catch (const Json::exception& e) {
+            throw std::runtime_error("Invalid JSON in config file: " + std::string(e.what()));
+        }
+
+        // Validate the root structure
+        if (!config.is_object() || !config.contains("lights")) {
+            throw std::runtime_error("Config file must contain a 'lights' array");
+        }
+
+        for (const auto& lightJson : config["lights"]) {
+            try {
+                if (lightJson.contains("type") && lightJson["type"] == "DirectionalLight") {
+                    DirectionalLight* directionalLight = parseDirectionalLight(lightJson);
+                    lights.push_back(directionalLight);
+                }
+                else if (lightJson.contains("type") && lightJson["type"] == "PointLight") {
+                    PointLight* pointLight = parsePointLight(lightJson);
+                    lights.push_back(pointLight);
+                }
+                else {
+                    throw std::runtime_error("Unknown light type: " + std::string(lightJson.value("type", "")));
+                }
+            } catch (const Json::exception& e) {
+                throw std::runtime_error("Error parsing light " +
+                                        //  std::to_string(primitiveJson.position()) + ": " +
+                                         std::string(e.what()));
+            }
+        }
+
+        if (config.contains("ambientLight")) {
+            Light::ambientLight = Color(
+                config["ambientLight"][0].get<double>(),
+                config["ambientLight"][1].get<double>(),
+                config["ambientLight"][2].get<double>());
+        }
+        if (config.contains("backgroundColor")) {
+            Light::backgroundColor = Color(
+                config["backgroundColor"][0].get<double>(),
+                config["backgroundColor"][1].get<double>(),
+                config["backgroundColor"][2].get<double>());
+        }
     }
 
 
@@ -245,5 +296,38 @@ private:
         // triangle->setLight(light);
 
         return triangle;
+    }
+
+    static PointLight* parsePointLight(const Json& json) {
+        Point location = Point(
+            json["location"][0].get<double>(),
+            json["location"][1].get<double>(),
+            json["location"][2].get<double>());
+        Color color = Color(
+            json["color"][0].get<double>(),
+            json["color"][1].get<double>(),
+            json["color"][2].get<double>());
+        double intensity = 1.0;
+        if(json.contains("intensity")) {
+            intensity = json["intensity"].get<double>();
+        }
+
+        PointLight* light = new PointLight(color, location, intensity);
+        return light;
+    }
+
+    static DirectionalLight* parseDirectionalLight(const Json& json) {
+
+        Vector3<double> directionToLight = Vector3<double>(
+            json["directionToLight"][0].get<double>(),
+            json["directionToLight"][1].get<double>(),
+            json["directionToLight"][2].get<double>());
+        Color color = Color(
+            json["color"][0].get<double>(),
+            json["color"][1].get<double>(),
+            json["color"][2].get<double>());
+        
+        DirectionalLight* light = new DirectionalLight(color, directionToLight);
+        return light;
     }
 };
