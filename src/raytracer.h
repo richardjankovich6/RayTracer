@@ -7,17 +7,16 @@
 #include "color.h"
 #include "ray.h"
 #include "camera.h"
-#include "primitives/primitive.h"
+// #include "primitives/primitive.h"
+#include "primitives/primitives.h"
 
 class Light;
 
 #ifndef RAYTRACER_H
 #define RAYTRACER_H
 
-
 class Raytracer {
 
-    // Light* light;
     Camera camera;
     int maxDepth = 1;
     int numThreads = 1;
@@ -38,7 +37,11 @@ class Raytracer {
 
 public:
 
-    std::vector<Primitive*> primitives;
+    // std::vector<Primitives*> primitives;
+
+    Triangles Triangles;
+    Spheres spheres;
+    
     std::vector<Light*> lights;
 
     Raytracer() {};
@@ -46,7 +49,6 @@ public:
     std::stringstream traceRays();
 
     void setCamera(Camera c) { camera = c; }
-    // void setLight(Light* l) { light = l; }
     void setMaxDepth(int i) { maxDepth = i; }
     void setNumThreads (int i) { numThreads = i > 0 ? i : 1; }
     void setNumSamples (int i) { numSamples = i > 0 ? i : 1; }

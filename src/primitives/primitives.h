@@ -9,8 +9,8 @@
 #include "../ray.h"
 #include "../point.h"
 
-#ifndef PRIMITIVE_H
-#define PRIMITIVE_H
+#ifndef PRIMITIVES_H
+#define PRIMITIVES_H
 
 struct Primitives {
 
@@ -18,6 +18,21 @@ struct Primitives {
 
     std::vector<double> diffuseR, diffuseG, diffuseB;
     std::vector<double> specularR, specularG, specularB;
+
+    void initializeVectors(int size) {
+        kDiffuse = std::vector<float>(size);
+        kSpecular = std::vector<float>(size);
+        kAmbient = std::vector<float>(size);
+        kGloss = std::vector<float>(size);
+        reflectiveness = std::vector<float>(size);
+        
+        diffuseR = std::vector<double>(size);
+        diffuseG = std::vector<double>(size);
+        diffuseB = std::vector<double>(size);
+        specularR = std::vector<double>(size);
+        specularG = std::vector<double>(size);
+        specularB = std::vector<double>(size);
+    }
 
     void addPrimitive(float kDiffuse_, float kSpecular_, float kAmbient_, float kGloss_, float reflectiveness_, Color diffuseColor_, Color specularColor_) {
         // int index = kDiffuse.size();
@@ -113,8 +128,8 @@ struct Primitives {
 
 #endif
 
-#ifndef SPHERE_H
-#define SPHERE_H
+#ifndef SPHERES_H
+#define SPHERES_H
 
 struct Spheres : public Primitives {
 
@@ -176,8 +191,8 @@ struct Spheres : public Primitives {
 
 #endif
 
-#ifndef TRIANGLE_H
-#define TRIANGLE_H
+#ifndef TRIANGLES_H
+#define TRIANGLES_H
 
 struct Triangles : public Primitives {
 
@@ -190,8 +205,6 @@ struct Triangles : public Primitives {
     std::vector<double> detriment;
 
     std::vector<bool> doubleSided;
-
-public:
 
     Triangles() : Primitives() {};
 

@@ -41,7 +41,7 @@ Color Raytracer::castRay(const Ray ray, const Vector3<double> lookDirection, int
 
     Color color = Color();
     Vector3<int> lightsContributed = Vector3<int>(0, 0, 0);
-    double lCont = 0;
+    // double lCont = 0;
 
     for (int i = 0; i < totalLights; i++) {
         bool bInShadow = castShadowRay(Ray(nearestPoint, lights[i]->getDirectionToLight()), nearestPrimitiveIndex);
@@ -53,7 +53,7 @@ Color Raytracer::castRay(const Ray ray, const Vector3<double> lookDirection, int
         //     lightsContributed[0] += temp[0] > 0 ? 1 : 0;
         // }
         color += temp;
-        lCont += 1;
+        // lCont += 1;
     }
 
     // for (int o = 0; o < 3; o++) {

@@ -6,6 +6,7 @@
 #include <stdexcept>
 
 
+#include "../primitives/primitives.h"
 #include "../primitives/primitive.h"
 #include "../primitives/sphere.h"
 #include "../primitives/triangle.h"
@@ -157,6 +158,57 @@ public:
                                          std::string(e.what()));
             }
         }
+    }
+
+    static void parsePrimitives(Triangles& triangles, Spheres& spheres, const std::string& filename) {
+        // Read the JSON file
+        std::ifstream configFile(filename);
+        if (!configFile.is_open()) {
+            throw std::runtime_error("Could not open config file: " + filename);
+        }
+
+        Json config;
+        try {
+            config = Json::parse(configFile, nullptr, true, true);
+        } catch (const Json::exception& e) {
+            throw std::runtime_error("Invalid JSON in config file: " + std::string(e.what()));
+        }
+
+        // Validate the root structure
+        if (!config.is_object() || !config.contains("primitives")) {
+            throw std::runtime_error("Config file must contain a 'primitives' array");
+        }
+
+        // int sphereCount = 0;
+        // int triangleCount = 0;
+
+        std::vector<nlohmann::basic_json<>> sphereJsons;
+        std::vector<nlohmann::basic_json<>> triangleJsons;
+
+        for (const auto& primitiveJson : config["primitives"]) {
+            try {
+                if (primitiveJson.contains("type") && primitiveJson["type"] == "Sphere") {
+                    // sphereCount++;
+                    sphereJsons.push_back(primitiveJson);
+                    // Sphere* sphere = parseSphere(primitiveJson);
+                    // primitives.push_back(sphere);
+                }
+                else if (primitiveJson.contains("type") && primitiveJson["type"] == "Triangle") {
+                    // triangleCount++;
+                    triangleJsons.push_back(primitiveJson);
+                    // Triangle* tri = parseTriangle(primitiveJson);
+                    // primitives.push_back(tri);
+                }
+                else {
+                    throw std::runtime_error("Unknown primitive type: " + std::string(primitiveJson.value("type", "")));
+                }
+            } catch (const Json::exception& e) {
+                throw std::runtime_error("Error parsing primitive at line " +
+                                        //  std::to_string(primitiveJson.position()) + ": " +
+                                         std::string(e.what()));
+            }
+        }
+        // triangles.detriment.
     }
 
 private:
