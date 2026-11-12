@@ -134,41 +134,33 @@ public:
         std::vector<nlohmann::basic_json<>> triangleJsons;
 
         for (const auto& primitiveJson : config["primitives"]) {
-            try {
-                if (primitiveJson.contains("type") && primitiveJson["type"] == "Sphere") {
-                    // sphereCount++;
-                    sphereJsons.push_back(primitiveJson);
-                    // Sphere* sphere = parseSphere(primitiveJson);
-                    // primitives.push_back(sphere);
-                }
-                else if (primitiveJson.contains("type") && primitiveJson["type"] == "Triangle") {
-                    // triangleCount++;
-                    triangleJsons.push_back(primitiveJson);
-                    // Triangle* tri = parseTriangle(primitiveJson);
-                    // primitives.push_back(tri);
-                }
-                else {
-                    throw std::runtime_error("Unknown primitive type: " + std::string(primitiveJson.value("type", "")));
-                }
-            } catch (const Json::exception& e) {
-                throw std::runtime_error("Error parsing primitive at line " +
-                                        //  std::to_string(primitiveJson.position()) + ": " +
-                                         std::string(e.what()));
+            if (primitiveJson.contains("type") && primitiveJson["type"] == "Sphere") {
+                // sphereCount++;
+                sphereJsons.push_back(primitiveJson);
+                // Sphere* sphere = parseSphere(primitiveJson);
+                // primitives.push_back(sphere);
+            }
+            else if (primitiveJson.contains("type") && primitiveJson["type"] == "Triangle") {
+                // triangleCount++;
+                triangleJsons.push_back(primitiveJson);
+                // Triangle* tri = parseTriangle(primitiveJson);
+                // primitives.push_back(tri);
+            }
+            else {
+                throw std::runtime_error("Unknown primitive type: " + std::string(primitiveJson.value("type", "")));
             }
         }
-        triangles.initializeVectors(triangleJsons.size());
-        for (int i = 0; i < triangleJsons.size(); i++) {
-            // parse json
-            parseTriangle(i, triangles, triangleJsons[i]);
-            // triangles.setriangle(i, Point p0, Point p1, Point p2, Vector3<double> normal, bool doubleSided_, float kDiffuse_, float kSpecular_, float kAmbient_, float kGloss_, float reflectiveness_, Color diffuseColor_, Color specularColor_)
-        }
-
         spheres.initializeVectors(sphereJsons.size());
         for (int i = 0; i < sphereJsons.size(); i++) {
-            parseSphere(i, spheres, sphereJsons[i]);
-            // parse json
-            // spheres.setSphere(i, Vector3<double> center_, double radius_, float kDiffuse_, float kSpecular_, float reflectiveness_, float kAmbient_, double kGloss_, Color diffuseColor_, Color specularColor_);
+            parseSphere(i, spheres, sphereJsons[i]);    
         }
+
+        triangles.initializeVectors(triangleJsons.size());
+        for (int i = 0; i < triangleJsons.size(); i++) {
+            parseTriangle(i, triangles, triangleJsons[i]);
+        }
+
+        
     }
 
 private:
