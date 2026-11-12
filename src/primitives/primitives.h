@@ -47,10 +47,12 @@ struct Primitives {
         // int index = kDiffuse.size();
 
         Vector3<float> temp = unitVec<float>({kDiffuse_, kSpecular_, kAmbient_});
-
         kDiffuse.push_back(temp[0]);
         kSpecular.push_back(temp[1]);
         kAmbient.push_back(temp[2]);
+
+        kGloss.push_back(kGloss_);
+        reflectiveness.push_back(reflectiveness_);
 
         diffuseR.push_back(diffuseColor_[0]);
         diffuseG.push_back(diffuseColor_[1]);
@@ -62,17 +64,22 @@ struct Primitives {
     }
 
     void setPrimitive(int i, float kDiffuse_, float kSpecular_, float kAmbient_, float kGloss_, float reflectiveness_, Color diffuseColor_, Color specularColor_) {
-        // int index = kDiffuse.size();
-
         if (i >= kDiffuse.size()) {
             return;
         }
 
-        Vector3<float> temp = unitVec<float>({kDiffuse_, kSpecular_, kAmbient_});
+        // Vector3<float> temp = unitVec<float>({kDiffuse_, kSpecular_, kAmbient_});
+        // kDiffuse[i] = temp[0];
+        // kSpecular[i] = temp[1];
+        // kAmbient[i] = temp[2];
 
-        kDiffuse[i] = temp[0];
-        kSpecular[i] = temp[1];
-        kAmbient[i] = temp[2];
+        float totalK = kAmbient_ + kDiffuse_ + kSpecular_;
+        totalK = 1;
+        kDiffuse[i] = kDiffuse_ / totalK;
+        kSpecular[i] = kSpecular_ / totalK;
+        kAmbient[i] = kAmbient_ / totalK;
+        kGloss[i] = kGloss_;
+        reflectiveness[i] = reflectiveness_;
 
         diffuseR[i] = diffuseColor_[0];
         diffuseG[i] = diffuseColor_[1];
@@ -85,8 +92,6 @@ struct Primitives {
     
     Primitives() {};
     virtual ~Primitives() = default;
-
-    // Color phongShading(Vector3<double> normal, Vector3<double> lookDirection, const Light* light, bool inShadow) const;
 
     Color phongShading(int index, Vector3<double> normal, Vector3<double> lookDirection, const Light* light, bool inShadow) const {
         
@@ -105,34 +110,15 @@ struct Primitives {
         Color specularColor = Color(specularR[index], specularG[index], specularB[index]);
         Color sColor = kSpecular[index] * light->getLightColor() * specularColor * pow(fmax(0.0, dot(lookDirection, reflectVector)), kGloss[index]);
 
+        // return sColor;
         return aColor + sColor + dColor;
-    }
-
-    virtual void removeIndex(int index) {
-        // kDiffuse. = temp[0];
-        // kSpecular[i] = temp[1];
-        // kAmbient[i] = temp[2];
-
-        // diffuseR[i] = diffuseColor_[0];
-        // diffuseG[i] = diffuseColor_[1];
-        // diffuseB[i] = diffuseColor_[2];
-
-        // specularR[i] = specularColor_[0];
-        // specularG[i] = specularColor_[1];
-        // specularB[i] = specularColor_[2];
     }
 
     inline Color getBackgroundColor() const { return Light::backgroundColor; }
 
-    virtual bool intersetRay(int i, Point& v, Ray ray) const = 0;
-
-    virtual Color getColor(int i, Point p, Vector3<double> v, const Light* light, bool inShadow) const {
-        return getBackgroundColor();
-    }
-
-    virtual Vector3<double> getNormal(Point p = Point()) const {
-        return Vector3<double>();
-    }
+    // virtual Color getColor(int i, Point p, Vector3<double> v, const Light* light, bool inShadow) const {
+    //     return getBackgroundColor();
+    // }
 };
 
 #endif
@@ -183,7 +169,7 @@ struct Spheres : public Primitives {
         return (p - getCenter(i)) / radius[i];
     }
 
-    bool intersetRay(int i, Point& p, const Ray ray) const override {
+    bool intersetRay(int i, Point& p, const Ray ray) const {
         Vector3 oc = getCenter(i) - ray.origin();
         bool bInside = oc.length() < radius[i];
 
@@ -204,10 +190,8 @@ struct Spheres : public Primitives {
         return true;
     };
 
-    virtual Color getColor(int i, Point p, Vector3<double> v, const Light* light, bool inShadow) const override {
-        // Vector3 normal = (p - Point(centerX, centerY, centerZ)) / radius;
-        Vector3 normal = normalize((p - getCenter(i)) / radius[i]);
-        // Vector3 normal = Point();
+    Color getColor(int i, Point p, Vector3<double> v, const Light* light, bool inShadow) const {
+        Vector3 normal = getNormal(i, p);
         return phongShading(i, normal, v, light, inShadow);
     }
 
@@ -259,12 +243,12 @@ struct Triangles : public Primitives {
         p0x[i] = p0[0];
         p0y[i] = p0[1];
         p0z[i] = p0[2];
-        p1x[i] = p0[0];
-        p1y[i] = p0[1];
-        p1z[i] = p0[2];
-        p2x[i] = p0[0];
-        p2y[i] = p0[1];
-        p2z[i] = p0[2];
+        p1x[i] = p1[0];
+        p1y[i] = p1[1];
+        p1z[i] = p1[2];
+        p2x[i] = p2[0];
+        p2y[i] = p2[1];
+        p2z[i] = p2[2];
 
         Vector3<double> temp = normalize(normal);
         normalX[i] = temp[0];
@@ -307,7 +291,7 @@ struct Triangles : public Primitives {
         detriment[i] = -dot(temp, Point(p0x[i], p0y[i], p0z[i]));
     };
 
-    bool intersetRay(int i, Point& p, const Ray ray) const override {
+    bool intersetRay(int i, Point& p, const Ray ray) const {
         Vector3<double> normal = getNormal(i);
         double vd = dot(normal, ray.direction());
         if (vd == 0) {
@@ -339,7 +323,7 @@ struct Triangles : public Primitives {
     }
 
     inline Vector3<double> getNormal(int i) const { return Vector3<double>(normalX[i], normalY[i], normalZ[i]); }
-    virtual Color getColor(int i, Point p, Vector3<double> v, const Light* light, bool inShadow) const override {
+    Color getColor(int i, Vector3<double> v, const Light* light, bool inShadow) const {
         return phongShading(i, getNormal(i), v, light, inShadow);
     }
     

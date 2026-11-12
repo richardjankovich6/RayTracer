@@ -63,7 +63,7 @@ Color Raytracer::castRay(const Ray ray, const Vector3<double> lookDirection, int
     int totalLights = lights.size();
 
     Color color = Color();
-    Vector3<int> lightsContributed = Vector3<int>(0, 0, 0);
+    // Vector3<int> lightsContributed = Vector3<int>(0, 0, 0);
     // double lCont = 0;
 
     for (int i = 0; i < totalLights; i++) {
@@ -76,7 +76,7 @@ Color Raytracer::castRay(const Ray ray, const Vector3<double> lookDirection, int
             temp = spheres.getColor(nearestPrimitiveIndex, nearestPoint, lookDirection, lights[i], bInShadow);
         }
         else {
-            temp = triangles.getColor(nearestPrimitiveIndex, nearestPoint, lookDirection, lights[i], bInShadow);
+            temp = triangles.getColor(nearestPrimitiveIndex, lookDirection, lights[i], bInShadow);
         }
         // Color temp = primitives[nearestPrimitiveIndex]->getColor(nearestPoint, lookDirection, lights[i], bInShadow);
         // Color temp = primitives[nearestPrimitiveIndex]->getColor(nearestPoint, lookDirection, lights[i], bInShadow);
@@ -99,7 +99,10 @@ Color Raytracer::castRay(const Ray ray, const Vector3<double> lookDirection, int
 
     // color /= totalLights;
 
-    float reflectiveness = nearestType == PrimitiveType::sphere ? spheres.reflectiveness[nearestPrimitiveIndex] : triangles.reflectiveness[nearestPrimitiveIndex];
+    float reflectiveness = 
+        nearestType == PrimitiveType::sphere ?
+            spheres.reflectiveness[nearestPrimitiveIndex] :
+            triangles.reflectiveness[nearestPrimitiveIndex];
 
     if (depth < maxDepth && reflectiveness > 0) {
     // if (depth < MAXDEPTH) {
@@ -169,12 +172,12 @@ std::stringstream Raytracer::traceRays() {
     lookDirection = unitVec(camera.lookFrom - camera.lookAt);
     Color* picArray = new Color[camera.width*camera.height];
 
-    // traceRaysTask(picArray, 300, camera.height, 300, camera.width);
+    // traceRaysTask(picArray, 200, camera.height, 200, camera.width-300);
+    // traceRaysTask(picArray, 300, camera.height, 300, camera.width-300);
 
     std::jthread* threads = new std::jthread[numThreads];
     int x = camera.width / numThreads;
     for (int i = 0; i < numThreads; i++) {
-        // threads[i] = std::jthread(&Raytracer::traceRaysTask, this, picArray, 0, camera.height, i * x, (i + 1) * x);
         threads[i] = std::jthread(&Raytracer::traceRaysTaskMutex, this, picArray, 0, camera.height);
     }
     for (int i = 0; i < numThreads; i++) {
