@@ -7,9 +7,6 @@
 
 
 #include "../primitives/primitives.h"
-#include "../primitives/primitive.h"
-#include "../primitives/sphere.h"
-#include "../primitives/triangle.h"
 #include "../lights/light.h"
 #include "../lights/pointLight.h"
 #include "../lights/directionalLight.h"
@@ -17,13 +14,8 @@
 
 
 #include "../nlohmann/json.hpp" // https://github.com/nlohmann/json
-#include "color.h"
+#include "../color.h"
 
-// using nlohmann::literals::operator ""_json;
-// using namespace nlohmann::literals;
-// using namespace nlohmann::json_literals;
-// using namespace nlohmann::literals::json_literals;
-// using namespace nlohmann;
 
 using Json = nlohmann::json;
 
@@ -119,47 +111,6 @@ public:
         }
     }
 
-
-    static void parsePrimitives(std::vector<Primitive*>& primitives, const std::string& filename) {
-        // Read the JSON file
-        std::ifstream configFile(filename);
-        if (!configFile.is_open()) {
-            throw std::runtime_error("Could not open config file: " + filename);
-        }
-
-        Json config;
-        try {
-            config = Json::parse(configFile, nullptr, true, true);
-        } catch (const Json::exception& e) {
-            throw std::runtime_error("Invalid JSON in config file: " + std::string(e.what()));
-        }
-
-        // Validate the root structure
-        if (!config.is_object() || !config.contains("primitives")) {
-            throw std::runtime_error("Config file must contain a 'primitives' array");
-        }
-
-        for (const auto& primitiveJson : config["primitives"]) {
-            try {
-                if (primitiveJson.contains("type") && primitiveJson["type"] == "Sphere") {
-                    Sphere* sphere = parseSphere(primitiveJson);
-                    primitives.push_back(sphere);
-                }
-                else if (primitiveJson.contains("type") && primitiveJson["type"] == "Triangle") {
-                    Triangle* tri = parseTriangle(primitiveJson);
-                    primitives.push_back(tri);
-                }
-                else {
-                    throw std::runtime_error("Unknown primitive type: " + std::string(primitiveJson.value("type", "")));
-                }
-            } catch (const Json::exception& e) {
-                throw std::runtime_error("Error parsing primitive at line " +
-                                        //  std::to_string(primitiveJson.position()) + ": " +
-                                         std::string(e.what()));
-            }
-        }
-    }
-
     static void parsePrimitives(Triangles& triangles, Spheres& spheres, const std::string& filename) {
         // Read the JSON file
         std::ifstream configFile(filename);
@@ -178,9 +129,6 @@ public:
         if (!config.is_object() || !config.contains("primitives")) {
             throw std::runtime_error("Config file must contain a 'primitives' array");
         }
-
-        // int sphereCount = 0;
-        // int triangleCount = 0;
 
         std::vector<nlohmann::basic_json<>> sphereJsons;
         std::vector<nlohmann::basic_json<>> triangleJsons;
@@ -208,12 +156,25 @@ public:
                                          std::string(e.what()));
             }
         }
-        // triangles.detriment.
+        triangles.initializeVectors(triangleJsons.size());
+        for (int i = 0; i < triangleJsons.size(); i++) {
+            // parse json
+            parseTriangle(i, triangles, triangleJsons[i]);
+            // triangles.setriangle(i, Point p0, Point p1, Point p2, Vector3<double> normal, bool doubleSided_, float kDiffuse_, float kSpecular_, float kAmbient_, float kGloss_, float reflectiveness_, Color diffuseColor_, Color specularColor_)
+        }
+
+        spheres.initializeVectors(sphereJsons.size());
+        for (int i = 0; i < sphereJsons.size(); i++) {
+            parseSphere(i, spheres, sphereJsons[i]);
+            // parse json
+            // spheres.setSphere(i, Vector3<double> center_, double radius_, float kDiffuse_, float kSpecular_, float reflectiveness_, float kAmbient_, double kGloss_, Color diffuseColor_, Color specularColor_);
+        }
     }
 
 private:
-    static Sphere* parseSphere(const Json& json) {
-        Sphere* sphere = new Sphere();
+
+    static void parseSphere(int index, Spheres& spheres, const Json& json) {
+        // Sphere* sphere = new Sphere();
 
         // Required properties
         if (!json.contains("center") || !json["center"].is_array() ||
@@ -221,25 +182,12 @@ private:
             throw std::runtime_error("Sphere must have a center with x, y, z coordinates");
         }
 
-        sphere->setCenter(Vector3(
-            json["center"][0].get<double>(),
-            json["center"][1].get<double>(),
-            json["center"][2].get<double>()
-        ));
+        Point center = Point(json["center"][0].get<double>(), json["center"][1].get<double>(), json["center"][2].get<double>());
 
-        sphere->setRadius(json["radius"].get<double>());
+        double radius = json["radius"].get<double>();
 
-        sphere->setDiffiuseColor(Vector3(
-            json["diffuseColor"][0].get<double>(),
-            json["diffuseColor"][1].get<double>(),
-            json["diffuseColor"][2].get<double>()
-        ));
-        sphere->setSpecularColor(Vector3(
-            json["specularColor"][0].get<double>(),
-            json["specularColor"][1].get<double>(),
-            json["specularColor"][2].get<double>()
-        ));
-
+        Color diffuseColor = Color(json["diffuseColor"][0].get<double>(), json["diffuseColor"][1].get<double>(), json["diffuseColor"][2].get<double>());
+        Color specularColor = Color(json["specularColor"][0].get<double>(), json["specularColor"][1].get<double>(), json["specularColor"][2].get<double>());
 
         // Set material properties
         float kDiffuse = 0.6, kSpecular = 0.7, kAmbient = 0.1;
@@ -252,27 +200,30 @@ private:
         if (json.contains("kAmbient") && json["kAmbient"].is_number()) {
             kAmbient = json["kAmbient"].get<float>();
         }
-        sphere->setKValues(kDiffuse, kSpecular, kAmbient);
+        // sphere->setKValues(kDiffuse, kSpecular, kAmbient);
 
         float kGloss = 1.0;
         if (json.contains("kGloss") && json["kGloss"].is_number()) {
             kGloss = json["kGloss"].get<float>();
         }
-        sphere->setKGloss(kGloss);
+        // sphere->setKGloss(kGloss);
 
         float reflectiveness = 0.0;
         if (json.contains("reflectiveness") && json["reflectiveness"].is_number()) {
             reflectiveness = json["reflectiveness"].get<float>();
         }
-        sphere->setReflectiveness(reflectiveness);
+        // sphere->setReflectiveness(reflectiveness);
+
+
+        spheres.setSphere(index, center, radius, kDiffuse, kSpecular, reflectiveness, kAmbient, kGloss, diffuseColor, specularColor);
 
 
         // sphere->setLight(light);
 
-        return sphere;
+        // return sphere;
     }
 
-    static Triangle* parseTriangle(const Json& json) {
+    static void parseTriangle(int index, Triangles& triangles, const Json& json) {
 
         // Required properties - three points
         if (!json.contains("points") || !json["points"].is_array() ||
@@ -286,35 +237,26 @@ private:
             }
         }
 
-        Triangle* triangle = new Triangle(
-            Point(json["points"][0][0].get<double>(), json["points"][0][1].get<double>(), json["points"][0][2].get<double>()),
-            Point(json["points"][1][0].get<double>(), json["points"][1][1].get<double>(), json["points"][1][2].get<double>()),
-            Point(json["points"][2][0].get<double>(), json["points"][2][1].get<double>(), json["points"][2][2].get<double>())
-        );
+        Point p0 = Point(json["points"][0][0].get<double>(), json["points"][0][1].get<double>(), json["points"][0][2].get<double>());
+        Point p1 = Point(json["points"][1][0].get<double>(), json["points"][1][1].get<double>(), json["points"][1][2].get<double>());
+        Point p2 = Point(json["points"][2][0].get<double>(), json["points"][2][1].get<double>(), json["points"][2][2].get<double>());
 
+        
+
+        Vector3<double> normal;
         if (json.contains("normal")) {
-            triangle->setNormal(Vector3<double>(
-                json["normal"][0].get<double>(), 
-                json["normal"][1].get<double>(), 
-                json["normal"][2].get<double>()
-            ));
+            normal = Vector3<double>(json["normal"][0].get<double>(), json["normal"][1].get<double>(), json["normal"][2].get<double>());
+        }
+        else {
+            Vector3<double> v1 = p2 - p1;
+            Vector3<double> v2 = p0 - p1;
+            normal = unitVec(cross(v1, v2));
         }
 
-        // Diffuse color
-        triangle->setDiffiuseColor(Vector3(
-            json["diffuseColor"][0].get<double>(),
-            json["diffuseColor"][1].get<double>(),
-            json["diffuseColor"][2].get<double>()
-        ));
+        Color diffuseColor = Color(json["diffuseColor"][0].get<double>(), json["diffuseColor"][1].get<double>(), json["diffuseColor"][2].get<double>());
+        Color specularColor = Color(json["specularColor"][0].get<double>(), json["specularColor"][1].get<double>(), json["specularColor"][2].get<double>());
 
-        // Specular color
-        triangle->setSpecularColor(Vector3(
-            json["specularColor"][0].get<double>(),
-            json["specularColor"][1].get<double>(),
-            json["specularColor"][2].get<double>()
-        ));
-
-        float kGloss = 12.0;
+        float kGloss = 0.0;
         if (json.contains("kGloss") && json["kGloss"].is_number()) {
             kGloss = json["kGloss"].get<float>();
         }
@@ -337,17 +279,13 @@ private:
             reflectiveness = json["reflectiveness"].get<float>();
         }
 
+        bool doubleSided = true;
+        if (json.contains("doubleSided") && json["doubleSided"].is_boolean()) {
+            reflectiveness = json["doubleSided"].get<bool>();
+        }
 
-        triangle->setKValues(kDiffuse, kSpecular, kAmbient);
+        triangles.setTriangle(index, p0, p1, p2, normal, doubleSided, kDiffuse, kSpecular, kAmbient, kGloss, reflectiveness, diffuseColor, specularColor);
 
-        // Set material properties
-        triangle->setReflectiveness(reflectiveness);
-        triangle->setKGloss(kGloss);
-
-        // Set light
-        // triangle->setLight(light);
-
-        return triangle;
     }
 
     static PointLight* parsePointLight(const Json& json) {

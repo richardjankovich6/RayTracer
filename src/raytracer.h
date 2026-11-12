@@ -31,15 +31,15 @@ class Raytracer {
     void traceRaysTask(Color* picArray, int heightStart, int heightEnd, int widthStart, int widthEnd) const;
     void traceRaysTaskMutex(Color* picArray, int heightStart, int heightEnd);
 
-    bool castShadowRay(const Ray ray, const int ignoredIndex) const;
+    bool castShadowRay(const Ray ray, const int ignoredIndex, const PrimitiveType pType = PrimitiveType::none) const;
 
-    Color castRay(const Ray ray, const Vector3<double> lookDirection, int depth = 0, int ignoredIndex = -1) const;
+    Color castRay(const Ray ray, const Vector3<double> lookDirection, int depth = 0, int ignoredIndex = -1, PrimitiveType ignoredType = PrimitiveType::none) const;
 
 public:
 
     // std::vector<Primitives*> primitives;
 
-    Triangles Triangles;
+    Triangles triangles;
     Spheres spheres;
     
     std::vector<Light*> lights;

@@ -1,34 +1,57 @@
 #include "raytracer.h"
+#include "primitives/primitives.h"
 #include <iostream>
-#include<sstream>
+#include <sstream>
 #include <thread>
 
-bool Raytracer::castShadowRay(const Ray ray, const int ignoredIndex) const {
-    for (int i = 0; i < primitives.size(); i++) {
-        if (i == ignoredIndex) { continue; }
+bool Raytracer::castShadowRay(const Ray ray, const int ignoredIndex, const PrimitiveType ignoredType) const {
+    for (int i = 0; i < spheres.pType.size(); i++) {
+        if (i == ignoredIndex && ignoredType == PrimitiveType::sphere) { continue; }
         Point p = ray.origin();
-        if (primitives[i]->intersetRay(p, ray)) {
+        if (spheres.intersetRay(i, p, ray)) {
+            return true;
+        }
+    }
+    for (int i = 0; i < triangles.pType.size(); i++) {
+        if (i == ignoredIndex && ignoredType == PrimitiveType::triangle) { continue; }
+        Point p = ray.origin();
+        if (triangles.intersetRay(i, p, ray)) {
             return true;
         }
     }
     return false;
 }
 
-Color Raytracer::castRay(const Ray ray, const Vector3<double> lookDirection, int depth, int ignoredIndex) const {
-    int totalPrimitives = primitives.size();
+Color Raytracer::castRay(const Ray ray, const Vector3<double> lookDirection, int depth, int ignoredIndex, PrimitiveType ignoredType) const {
+    int totalPrimitives = triangles.pType.size() + spheres.pType.size();
     int nearestPrimitiveIndex = -1;
+    PrimitiveType nearestType = PrimitiveType::none;
+    
     double lowestDistance = std::numeric_limits<double>::max();
     Point currentPoint = Point();
     Point nearestPoint;
 
-    for (int i = 0; i < totalPrimitives; i++) {
-        if (i == ignoredIndex) { continue; }
-        if (primitives[i]->intersetRay(currentPoint, ray)) {
+    for (int i = 0; i < spheres.pType.size(); i++) {
+        if (i == ignoredIndex && ignoredType == PrimitiveType::sphere) { continue; }
+        if (spheres.intersetRay(i, currentPoint, ray)) {
             double currentDistance = (currentPoint - ray.origin()).length();
             if (currentDistance < lowestDistance) { 
                 nearestPrimitiveIndex = i;
                 lowestDistance = currentDistance;
                 nearestPoint = currentPoint;
+                nearestType = PrimitiveType::sphere;
+            }
+        }
+    }
+    for (int i = 0; i < triangles.pType.size(); i++) {
+        if (i == ignoredIndex && ignoredType == PrimitiveType::triangle) { continue; }
+        if (triangles.intersetRay(i, currentPoint, ray)) {
+            double currentDistance = (currentPoint - ray.origin()).length();
+            if (currentDistance < lowestDistance) { 
+                nearestPrimitiveIndex = i;
+                lowestDistance = currentDistance;
+                nearestPoint = currentPoint;
+                nearestType = PrimitiveType::triangle;
             }
         }
     }
@@ -44,11 +67,19 @@ Color Raytracer::castRay(const Ray ray, const Vector3<double> lookDirection, int
     // double lCont = 0;
 
     for (int i = 0; i < totalLights; i++) {
-        bool bInShadow = castShadowRay(Ray(nearestPoint, lights[i]->getDirectionToLight()), nearestPrimitiveIndex);
+        bool bInShadow = castShadowRay(Ray(nearestPoint, lights[i]->getDirectionToLight()), nearestPrimitiveIndex, nearestType);
 
         if (bInShadow) { continue; }
 
-        Color temp = primitives[nearestPrimitiveIndex]->getColor(nearestPoint, lookDirection, lights[i], bInShadow);
+        Color temp;
+        if (nearestType == PrimitiveType::sphere) {
+            temp = spheres.getColor(nearestPrimitiveIndex, nearestPoint, lookDirection, lights[i], bInShadow);
+        }
+        else {
+            temp = triangles.getColor(nearestPrimitiveIndex, nearestPoint, lookDirection, lights[i], bInShadow);
+        }
+        // Color temp = primitives[nearestPrimitiveIndex]->getColor(nearestPoint, lookDirection, lights[i], bInShadow);
+        // Color temp = primitives[nearestPrimitiveIndex]->getColor(nearestPoint, lookDirection, lights[i], bInShadow);
         // for (int o = 0; o < 3; o++) {
         //     lightsContributed[0] += temp[0] > 0 ? 1 : 0;
         // }
@@ -68,15 +99,24 @@ Color Raytracer::castRay(const Ray ray, const Vector3<double> lookDirection, int
 
     // color /= totalLights;
 
-    if (depth < maxDepth && primitives[nearestPrimitiveIndex]->getReflectiveness() > 0) {
+    float reflectiveness = nearestType == PrimitiveType::sphere ? spheres.reflectiveness[nearestPrimitiveIndex] : triangles.reflectiveness[nearestPrimitiveIndex];
+
+    if (depth < maxDepth && reflectiveness > 0) {
     // if (depth < MAXDEPTH) {
 
-        Ray reflectRay = Ray(nearestPoint, primitives[nearestPrimitiveIndex]->getNormal(nearestPoint));
+        Ray reflectRay;
+        if (nearestType == PrimitiveType::sphere) {
+            reflectRay = Ray(nearestPoint, spheres.getNormal(nearestPrimitiveIndex, nearestPoint));
+        }
+        else {
+            reflectRay = Ray(nearestPoint, triangles.getNormal(nearestPrimitiveIndex));
+        }
+        //  = Ray(nearestPoint, primitives[nearestPrimitiveIndex]->getNormal(nearestPoint));
 
         Color recursiveColor = castRay(reflectRay, lookDirection, depth + 1, nearestPrimitiveIndex);
 
 
-        color = recursiveColor + color * (1 - primitives[nearestPrimitiveIndex]->getReflectiveness());
+        color = recursiveColor + color * (1 - reflectiveness);
 
     }
 

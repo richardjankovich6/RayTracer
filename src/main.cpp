@@ -5,9 +5,7 @@
 #include <sstream>
 #include <chrono>
 
-
 #include "utils/jsonParsingHelper.h"
-
 #include "raytracer.h"
 
 int MAXDEPTH = 20;
@@ -16,6 +14,8 @@ int NUMSAMPLES = 5;
 
 int main() {
 
+    // std::cout << sizeof(PrimitiveType) << std::endl;
+
     Raytracer raytracer;
     raytracer.setMaxDepth(MAXDEPTH);
     raytracer.setNumThreads(NUMTHREADS);
@@ -23,7 +23,8 @@ int main() {
 
     raytracer.setCamera(JsonParsingHelper::parseCameraJson("../configs/camera.json"));
     JsonParsingHelper::parseLights(raytracer.lights, "../configs/lights.json");
-    JsonParsingHelper::parsePrimitives(raytracer.primitives, "../configs/scenes/boxScene1.json");
+    // JsonParsingHelper::parsePrimitives(raytracer.primitives, "../configs/scenes/boxScene1.json");
+    JsonParsingHelper::parsePrimitives(raytracer.triangles, raytracer.spheres, "../configs/scenes/boxScene1.json");
 
     auto start = std::chrono::high_resolution_clock::now();
 
@@ -37,6 +38,8 @@ int main() {
 
     // std::cout << sizeof(Triangle) << std::endl;
     // std::cout << sizeof(Sphere) << std::endl;
+
+    
     
     return 0;
 }
