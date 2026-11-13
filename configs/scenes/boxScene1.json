@@ -191,7 +191,7 @@
                 [-5.0, -5.0, 5.0]
             ],
             "normal": [1.0, 0.0, 0.0],
-           "kDiffuse": 0.1,
+            "kDiffuse": 0.1,
             "kSpecular": 0.9,
             "kAmbient": 0.1,
             "reflectiveness": 0.5,
