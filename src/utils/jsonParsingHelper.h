@@ -182,27 +182,27 @@ private:
         Color specularColor = Color(json["specularColor"][0].get<double>(), json["specularColor"][1].get<double>(), json["specularColor"][2].get<double>());
 
         // Set material properties
-        float kDiffuse = 0.6, kSpecular = 0.7, kAmbient = 0.1;
+        double kDiffuse = 0.6, kSpecular = 0.7, kAmbient = 0.1;
         if (json.contains("kDiffuse") && json["kDiffuse"].is_number()) {
-            kDiffuse = json["kDiffuse"].get<float>();
+            kDiffuse = json["kDiffuse"].get<double>();
         }
         if (json.contains("kSpecular") && json["kSpecular"].is_number()) {
-            kSpecular = json["kSpecular"].get<float>();
+            kSpecular = json["kSpecular"].get<double>();
         }
         if (json.contains("kAmbient") && json["kAmbient"].is_number()) {
-            kAmbient = json["kAmbient"].get<float>();
+            kAmbient = json["kAmbient"].get<double>();
         }
         // sphere->setKValues(kDiffuse, kSpecular, kAmbient);
 
-        float kGloss = 1.0;
+        double kGloss = 1.0;
         if (json.contains("kGloss") && json["kGloss"].is_number()) {
-            kGloss = json["kGloss"].get<float>();
+            kGloss = json["kGloss"].get<double>();
         }
         // sphere->setKGloss(kGloss);
 
-        float reflectiveness = 0.0;
+        double reflectiveness = 0.0;
         if (json.contains("reflectiveness") && json["reflectiveness"].is_number()) {
-            reflectiveness = json["reflectiveness"].get<float>();
+            reflectiveness = json["reflectiveness"].get<double>();
         }
         // sphere->setReflectiveness(reflectiveness);
 
@@ -248,27 +248,27 @@ private:
         Color diffuseColor = Color(json["diffuseColor"][0].get<double>(), json["diffuseColor"][1].get<double>(), json["diffuseColor"][2].get<double>());
         Color specularColor = Color(json["specularColor"][0].get<double>(), json["specularColor"][1].get<double>(), json["specularColor"][2].get<double>());
 
-        float kGloss = 0.0;
+        double kGloss = 0.0;
         if (json.contains("kGloss") && json["kGloss"].is_number()) {
             kGloss = json["kGloss"].get<float>();
         }
 
 
         // Optional properties with defaults
-        float kDiffuse = 0.6, kSpecular = 0.7, kAmbient = 0.1;
+        double kDiffuse = 0.6, kSpecular = 0.7, kAmbient = 0.1;
         if (json.contains("kDiffuse") && json["kDiffuse"].is_number()) {
-            kDiffuse = json["kDiffuse"].get<float>();
+            kDiffuse = json["kDiffuse"].get<double>();
         }
         if (json.contains("kSpecular") && json["kSpecular"].is_number()) {
-            kSpecular = json["kSpecular"].get<float>();
+            kSpecular = json["kSpecular"].get<double>();
         }
         if (json.contains("kAmbient") && json["kAmbient"].is_number()) {
-            kAmbient = json["kAmbient"].get<float>();
+            kAmbient = json["kAmbient"].get<double>();
         }
 
-        float reflectiveness = 0.0;
+        double reflectiveness = 0.0;
         if (json.contains("reflectiveness") && json["reflectiveness"].is_number()) {
-            reflectiveness = json["reflectiveness"].get<float>();
+            reflectiveness = json["reflectiveness"].get<double>();
         }
 
         bool doubleSided = true;
