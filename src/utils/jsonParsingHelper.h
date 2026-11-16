@@ -253,8 +253,6 @@ private:
             kGloss = json["kGloss"].get<float>();
         }
 
-
-        // Optional properties with defaults
         double kDiffuse = 0.6, kSpecular = 0.7, kAmbient = 0.1;
         if (json.contains("kDiffuse") && json["kDiffuse"].is_number()) {
             kDiffuse = json["kDiffuse"].get<double>();

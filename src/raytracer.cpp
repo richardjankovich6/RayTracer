@@ -127,15 +127,11 @@ Color Raytracer::castRay(const Ray ray, const Vector3<double> lookDirection, int
 }
 
 void Raytracer::traceRaysTask(Color* picArray, int heightStart, int heightEnd, int widthStart, int widthEnd) const {
-    Color c;
-    Ray r;
-
     for (int h = heightStart; h < heightEnd; h++) {
         for (int w = widthStart; w < widthEnd; w++) {
-            c = Color(0.0,0.0,0.0);
+            Color c = Color(0.0,0.0,0.0);
             for (int i = 0; i < numSamples; i++) {
-                // r = camera.makeRay(w, h);
-                r = camera.makeRandomRay(w, h);
+                Ray r = camera.makeRandomRay(w, h);
                 c += castRay(r, lookDirection, 0);
             }
             picArray[w + h * camera.width] = c / numSamples;
@@ -144,9 +140,6 @@ void Raytracer::traceRaysTask(Color* picArray, int heightStart, int heightEnd, i
 }
 
 void Raytracer::traceRaysTaskMutex(Color* picArray, int heightStart, int heightEnd) {
-    Color c;
-    Ray r;
-
     int curW = 0;
     while (currentWidth < camera.width) {
         editCurrentWidth.lock();
@@ -155,10 +148,10 @@ void Raytracer::traceRaysTaskMutex(Color* picArray, int heightStart, int heightE
         editCurrentWidth.unlock();
         for (int w = curW; w < curW + threadIncrimentSize; w++) {
             for (int h = 0; h < camera.height; h++) {
-                c = Color(0.0,0.0,0.0);
+                Color c = Color(0.0,0.0,0.0);
                 for (int i = 0; i < numSamples; i++) {
-                    // r = camera.makeRay(w, h);
-                    r = camera.makeRandomRay(w, h);
+                    // Ray r = camera.makeRay(w, h);
+                    Ray r = camera.makeRandomRay(w, h);
                     c += castRay(r, lookDirection, 0);
                 }
                 picArray[w + h * camera.width] = c / numSamples;
