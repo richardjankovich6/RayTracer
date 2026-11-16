@@ -119,19 +119,19 @@ struct Primitives {
         double totalK = kAmbient_ + kDiffuse_ + kSpecular_;
         // totalK = 1;
         // materialValues[i + MaterialOffset::
-        materialValues[i + MaterialOffset::kDiffuse] = kDiffuse_ / totalK;
-        materialValues[i + MaterialOffset::kSpecular] = kSpecular_ / totalK;
-        materialValues[i + MaterialOffset::kAmbient] = kAmbient_ / totalK;
-        materialValues[i + MaterialOffset::kGloss] = kGloss_;
-        materialValues[i + MaterialOffset::reflectiveness] = reflectiveness_;
+        materialValues[i * numMaterialValues + MaterialOffset::kDiffuse] = kDiffuse_ / totalK;
+        materialValues[i * numMaterialValues + MaterialOffset::kSpecular] = kSpecular_ / totalK;
+        materialValues[i * numMaterialValues + MaterialOffset::kAmbient] = kAmbient_ / totalK;
+        materialValues[i * numMaterialValues + MaterialOffset::kGloss] = kGloss_;
+        materialValues[i * numMaterialValues + MaterialOffset::reflectiveness] = reflectiveness_;
 
-        materialValues[i + MaterialOffset::diffuseR] = diffuseColor_[0];
-        materialValues[i + MaterialOffset::diffuseG] = diffuseColor_[1];
-        materialValues[i + MaterialOffset::diffuseB] = diffuseColor_[2];
+        materialValues[i * numMaterialValues + MaterialOffset::diffuseR] = diffuseColor_[0];
+        materialValues[i * numMaterialValues + MaterialOffset::diffuseG] = diffuseColor_[1];
+        materialValues[i * numMaterialValues + MaterialOffset::diffuseB] = diffuseColor_[2];
 
-        materialValues[i + MaterialOffset::specularR] = specularColor_[0];
-        materialValues[i + MaterialOffset::specularG] = specularColor_[1];
-        materialValues[i + MaterialOffset::specularB] = specularColor_[2];
+        materialValues[i * numMaterialValues + MaterialOffset::specularR] = specularColor_[0];
+        materialValues[i * numMaterialValues + MaterialOffset::specularG] = specularColor_[1];
+        materialValues[i * numMaterialValues + MaterialOffset::specularB] = specularColor_[2];
     }
     
     Primitives() {};
