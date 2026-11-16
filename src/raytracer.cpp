@@ -141,6 +141,7 @@ void Raytracer::traceRaysTask(Color* picArray, int heightStart, int heightEnd, i
 
 void Raytracer::traceRaysTaskMutex(Color* picArray, int heightStart, int heightEnd) {
     int curW = 0;
+    double inversSamples = 1.0 / static_cast<double>(numSamples);
     while (currentWidth < camera.width) {
         editCurrentWidth.lock();
         curW = currentWidth;
@@ -150,11 +151,12 @@ void Raytracer::traceRaysTaskMutex(Color* picArray, int heightStart, int heightE
             for (int h = 0; h < camera.height; h++) {
                 Color c = Color(0.0,0.0,0.0);
                 for (int i = 0; i < numSamples; i++) {
-                    // Ray r = camera.makeRay(w, h);
-                    Ray r = camera.makeRandomRay(w, h);
-                    c += castRay(r, lookDirection, 0);
+                    c += castRay(camera.makeRandomRay(w, h), lookDirection, 0);
                 }
-                picArray[w + h * camera.width] = c / numSamples;
+                picArray[w + h * camera.width] = c * inversSamples;
+
+                // Color c = castRay(camera.makeRay(w, h), lookDirection, 0);
+                // picArray[w + h * camera.width] = c;
             }
         }
         
