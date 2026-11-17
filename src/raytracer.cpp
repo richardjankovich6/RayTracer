@@ -168,7 +168,7 @@ std::stringstream Raytracer::traceRays() {
     Color* picArray = new Color[camera.width*camera.height];
     // std::vector<Color> picArray = std::vector<Color>(camera.width*camera.height);
 
-    // traceRaysTask(picArray, 200, camera.height, 200, camera.width-300);
+    // traceRaysTask(picArray, 0, camera.height, 641, camera.width-300);
     // traceRaysTask(picArray, 300, camera.height, 300, camera.width-300);
 
     std::jthread* threads = new std::jthread[numThreads];

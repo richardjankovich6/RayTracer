@@ -41,7 +41,7 @@ public:
 
     Triangles triangles;
     Spheres spheres;
-    
+
     std::vector<Light*> lights;
 
     Raytracer() {};
@@ -49,9 +49,9 @@ public:
     std::stringstream traceRays();
 
     void setCamera(Camera c) { camera = c; }
-    void setMaxDepth(int i) { maxDepth = i; }
-    void setNumThreads (int i) { numThreads = i > 0 ? i : 1; }
-    void setNumSamples (int i) { numSamples = i > 0 ? i : 1; }
+    void setMaxDepth(int i) { maxDepth = i > 0 ? i : 1; }
+    void setNumThreads(int i) { numThreads = i > 0 ? i : 1; }
+    void setNumSamples(int i) { numSamples = i > 0 ? i : 1; }
 
 };
 
