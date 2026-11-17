@@ -88,7 +88,6 @@ Color Raytracer::castRay(const Ray ray, const Vector3<double> lookDirection, int
             triangles.materialValues[nearestPrimitiveIndex * numMaterialValues + MaterialOffset::reflectiveness];
 
     if (depth < maxDepth && reflectiveness > 0) {
-    // if (depth < MAXDEPTH) {
 
         Ray reflectRay;
         if (nearestType == PrimitiveType::sphere) {
@@ -97,13 +96,10 @@ Color Raytracer::castRay(const Ray ray, const Vector3<double> lookDirection, int
         else {
             reflectRay = Ray(nearestPoint, triangles.getNormal(nearestPrimitiveIndex));
         }
-        //  = Ray(nearestPoint, primitives[nearestPrimitiveIndex]->getNormal(nearestPoint));
 
         Color recursiveColor = castRay(reflectRay, lookDirection, depth + 1, nearestPrimitiveIndex, nearestType);
 
-
         color = recursiveColor + color * (1 - reflectiveness);
-
     }
 
     return color;
