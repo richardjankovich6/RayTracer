@@ -75,7 +75,7 @@ Color Raytracer::castRay(const Ray ray, const Vector3<double> lookDirection, int
             temp = spheres.getColor(nearestPrimitiveIndex, nearestPoint, lookDirection, lights[i], bInShadow);
         }
         else {
-            temp = triangles.getColor(nearestPrimitiveIndex, lookDirection, lights[i], bInShadow);
+            temp = triangles.getColor(nearestPrimitiveIndex, nearestPoint, lookDirection, lights[i], bInShadow);
         }
         color += temp;
         // lCont += 1;

@@ -137,7 +137,7 @@ struct Primitives {
     Primitives() {};
     virtual ~Primitives() = default;
 
-    Color phongShading(int index, Vector3<double> normal, Vector3<double> lookDirection, const Light* light, bool inShadow) const {
+    Color phongShading(int index, Vector3<double> normal, Vector3<double> lookDirection, const Light* light, const Point from, bool inShadow) const {
         
         if (index >= numPrimitives) { return Light::backgroundColor; }
 
@@ -149,10 +149,10 @@ struct Primitives {
             return aColor;
         }
         
-        double dotProduct = dot(normal, light->getDirectionToLight());
+        double dotProduct = dot(normal, light->getDirectionToLight(from));
         Color dColor = materialValues[index * numMaterialValues + MaterialOffset::kDiffuse] * light->getLightColor() * diffuseColor * fmax(0.0, dotProduct);
 
-        Vector3 reflectVector = unitVec(2 * normal * light->getDirectionToLight());
+        Vector3 reflectVector = unitVec(2 * normal * light->getDirectionToLight(from));
         Color specularColor = Color(materialValues[index * numMaterialValues + MaterialOffset::specularR],
                                     materialValues[index * numMaterialValues + MaterialOffset::specularG],
                                     materialValues[index * numMaterialValues + MaterialOffset::specularB]);
@@ -253,7 +253,7 @@ struct Spheres : public Primitives {
 
     Color getColor(int i, Point p, Vector3<double> v, const Light* light, bool inShadow) const {
         Vector3 normal = getNormal(i, p);
-        return phongShading(i, normal, v, light, inShadow);
+        return phongShading(i, normal, v, light, p, inShadow);
     }
 
 };
@@ -413,8 +413,8 @@ struct Triangles : public Primitives {
     }
 
     inline Vector3<double> getNormal(int i) const { return Vector3<double>(triangleValues[i * numTriangleValues + TriangleValuesOffset::normalX], triangleValues[i * numTriangleValues + TriangleValuesOffset::normalY], triangleValues[i * numTriangleValues + TriangleValuesOffset::normalZ]); }
-    Color getColor(int i, Vector3<double> v, const Light* light, bool inShadow) const {
-        return phongShading(i, getNormal(i), v, light, inShadow);
+    Color getColor(int i, Point p, Vector3<double> v, const Light* light, bool inShadow) const {
+        return phongShading(i, getNormal(i), v, light, p, inShadow);
     }
     
 };
