@@ -63,7 +63,6 @@ Color Raytracer::castRay(const Ray ray, const Vector3<double> lookDirection, int
     int totalLights = lights.size();
 
     Color color = Color();
-    // Vector3<int> lightsContributed = Vector3<int>(0, 0, 0);
     // double lCont = 0;
 
     for (int i = 0; i < totalLights; i++) {
@@ -78,26 +77,10 @@ Color Raytracer::castRay(const Ray ray, const Vector3<double> lookDirection, int
         else {
             temp = triangles.getColor(nearestPrimitiveIndex, lookDirection, lights[i], bInShadow);
         }
-        // Color temp = primitives[nearestPrimitiveIndex]->getColor(nearestPoint, lookDirection, lights[i], bInShadow);
-        // Color temp = primitives[nearestPrimitiveIndex]->getColor(nearestPoint, lookDirection, lights[i], bInShadow);
-        // for (int o = 0; o < 3; o++) {
-        //     lightsContributed[0] += temp[0] > 0 ? 1 : 0;
-        // }
         color += temp;
         // lCont += 1;
     }
-
-    // for (int o = 0; o < 3; o++) {
-    //     color[o] = lightsContributed[o] != 0 ? color[o] / lightsContributed[o] : color[o];
-    // }
-
     // color = lCont != 0 ? color / lCont : color;
-
-    // color[0] /= lightsContributed[0];
-
-    // color /= lightsContributed;
-
-    // color /= totalLights;
 
     double reflectiveness = 
         nearestType == PrimitiveType::sphere ?
@@ -116,7 +99,7 @@ Color Raytracer::castRay(const Ray ray, const Vector3<double> lookDirection, int
         }
         //  = Ray(nearestPoint, primitives[nearestPrimitiveIndex]->getNormal(nearestPoint));
 
-        Color recursiveColor = castRay(reflectRay, lookDirection, depth + 1, nearestPrimitiveIndex);
+        Color recursiveColor = castRay(reflectRay, lookDirection, depth + 1, nearestPrimitiveIndex, nearestType);
 
 
         color = recursiveColor + color * (1 - reflectiveness);
