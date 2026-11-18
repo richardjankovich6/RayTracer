@@ -46,7 +46,6 @@ struct Lights {
     double getLightIntensity(int i) const {
         return lightValues[i * numLightValues + LightValueOffset::lightIntensity];
     }
-    // virtual Vector3<double> getDirectionToLight(const int i, const Point from = Point()) const = 0;
 
 };
 
