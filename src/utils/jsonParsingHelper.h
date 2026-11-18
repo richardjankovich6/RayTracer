@@ -250,7 +250,7 @@ private:
 
         double kGloss = 0.0;
         if (json.contains("kGloss") && json["kGloss"].is_number()) {
-            kGloss = json["kGloss"].get<float>();
+            kGloss = json["kGloss"].get<double>();
         }
 
         double kDiffuse = 0.6, kSpecular = 0.7, kAmbient = 0.1;

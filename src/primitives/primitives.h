@@ -210,7 +210,7 @@ struct Spheres : public Primitives {
     }
     */
 
-    void setSphere(int i, Vector3<double> center_, double radius_, float kDiffuse_, float kSpecular_, float reflectiveness_, float kAmbient_, double kGloss_, Color diffuseColor_, Color specularColor_) {
+    void setSphere(int i, Vector3<double> center_, double radius_, double kDiffuse_, double kSpecular_, double reflectiveness_, double kAmbient_, double kGloss_, Color diffuseColor_, Color specularColor_) {
         sphereValues[i * numSphereValues + SphereValueOffset::centerX] = center_[0];
         sphereValues[i * numSphereValues + SphereValueOffset::centerY] = center_[1];
         sphereValues[i * numSphereValues + SphereValueOffset::centerZ] = center_[2];
@@ -323,7 +323,7 @@ struct Triangles : public Primitives {
     };
     */
 
-    void setTriangle(int i, Point p0, Point p1, Point p2, Vector3<double> normal, bool doubleSided_, float kDiffuse_, float kSpecular_, float kAmbient_, float kGloss_, float reflectiveness_, Color diffuseColor_, Color specularColor_) {
+    void setTriangle(int i, Point p0, Point p1, Point p2, Vector3<double> normal, bool doubleSided_, double kDiffuse_, double kSpecular_, double kAmbient_, double kGloss_, double reflectiveness_, Color diffuseColor_, Color specularColor_) {
         triangleValues[i * numTriangleValues + TriangleValuesOffset::p0x] = p0[0];
         triangleValues[i * numTriangleValues + TriangleValuesOffset::p0y] = p0[1];
         triangleValues[i * numTriangleValues + TriangleValuesOffset::p0z] = p0[2];
