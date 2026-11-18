@@ -22,7 +22,7 @@ int main() {
     raytracer.setNumSamples(NUMSAMPLES);
 
     raytracer.setCamera(JsonParsingHelper::parseCameraJson("../configs/camera.json"));
-    JsonParsingHelper::parseLights(raytracer.lights, "../configs/lights.json");
+    JsonParsingHelper::parseLights(raytracer.directionalLights, raytracer.pointLights, "../configs/lights.json");
     // JsonParsingHelper::parsePrimitives(raytracer.primitives, "../configs/scenes/boxScene1.json");
     JsonParsingHelper::parsePrimitives(raytracer.triangles, raytracer.spheres, "../configs/scenes/boxScene1.json");
 

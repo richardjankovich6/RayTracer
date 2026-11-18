@@ -1,6 +1,6 @@
 #pragma once
 
-#include <vector>
+// #include <vector>
 #include <mutex>
 
 #include "vector3.h"
@@ -9,8 +9,9 @@
 #include "camera.h"
 // #include "primitives/primitive.h"
 #include "primitives/primitives.h"
+#include "lights/lights.h"
 
-class Light;
+// class Light;
 
 #ifndef RAYTRACER_H
 #define RAYTRACER_H
@@ -42,7 +43,12 @@ public:
     Triangles triangles;
     Spheres spheres;
 
-    std::vector<Light*> lights;
+    PointLights pointLights;
+    DirectionalLights directionalLights;
+
+
+
+    // std::vector<Light*> lights;
 
     Raytracer() {};
 

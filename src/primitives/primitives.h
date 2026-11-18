@@ -137,7 +137,7 @@ struct Primitives {
     Primitives() {};
     virtual ~Primitives() = default;
 
-    Color phongShading(int index, Vector3<double> normal, Vector3<double> lookDirection, const Light* light, const Point from, bool inShadow) const {
+    Color phongShading(int index, Vector3<double> normal, Vector3<double> lookDirection, const Vector3<double> directionToLight, const Color lightColor, const Point from, bool inShadow) const {
         
         if (index >= numPrimitives) { return Light::backgroundColor; }
 
@@ -149,14 +149,14 @@ struct Primitives {
             return aColor;
         }
         
-        double dotProduct = dot(normal, light->getDirectionToLight(from));
-        Color dColor = materialValues[index * numMaterialValues + MaterialOffset::kDiffuse] * light->getLightColor() * diffuseColor * fmax(0.0, dotProduct);
+        double dotProduct = dot(normal, directionToLight);
+        Color dColor = materialValues[index * numMaterialValues + MaterialOffset::kDiffuse] * lightColor * diffuseColor * fmax(0.0, dotProduct);
 
-        Vector3 reflectVector = unitVec(2 * normal * light->getDirectionToLight(from));
+        Vector3 reflectVector = unitVec(2 * normal * directionToLight);
         Color specularColor = Color(materialValues[index * numMaterialValues + MaterialOffset::specularR],
                                     materialValues[index * numMaterialValues + MaterialOffset::specularG],
                                     materialValues[index * numMaterialValues + MaterialOffset::specularB]);
-        Color sColor = materialValues[index * numMaterialValues + MaterialOffset::kSpecular] * light->getLightColor() * specularColor * pow(fmax(0.0, dot(lookDirection, reflectVector)), materialValues[index * numMaterialValues + MaterialOffset::kGloss]);
+        Color sColor = materialValues[index * numMaterialValues + MaterialOffset::kSpecular] * lightColor * specularColor * pow(fmax(0.0, dot(lookDirection, reflectVector)), materialValues[index * numMaterialValues + MaterialOffset::kGloss]);
 
         // return sColor;
         return aColor + sColor + dColor;
@@ -251,9 +251,9 @@ struct Spheres : public Primitives {
         return true;
     };
 
-    Color getColor(int i, Point p, Vector3<double> v, const Light* light, bool inShadow) const {
+    Color getColor(int i, Point p, Vector3<double> v, const Vector3<double> directionToLight, const Color lightColor, bool inShadow) const {
         Vector3 normal = getNormal(i, p);
-        return phongShading(i, normal, v, light, p, inShadow);
+        return phongShading(i, normal, v, directionToLight, lightColor, p, inShadow);
     }
 
 };
@@ -413,8 +413,8 @@ struct Triangles : public Primitives {
     }
 
     inline Vector3<double> getNormal(int i) const { return Vector3<double>(triangleValues[i * numTriangleValues + TriangleValuesOffset::normalX], triangleValues[i * numTriangleValues + TriangleValuesOffset::normalY], triangleValues[i * numTriangleValues + TriangleValuesOffset::normalZ]); }
-    Color getColor(int i, Point p, Vector3<double> v, const Light* light, bool inShadow) const {
-        return phongShading(i, getNormal(i), v, light, p, inShadow);
+    Color getColor(int i, Point p, Vector3<double> v, const Vector3<double> directionToLight, const Color lightColor, bool inShadow) const {
+        return phongShading(i, getNormal(i), v, directionToLight, lightColor, p, inShadow);
     }
     
 };

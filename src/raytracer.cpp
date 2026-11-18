@@ -23,7 +23,7 @@ bool Raytracer::castShadowRay(const Ray ray, const int ignoredIndex, const Primi
 }
 
 Color Raytracer::castRay(const Ray ray, const Vector3<double> lookDirection, int depth, int ignoredIndex, PrimitiveType ignoredType) const {
-    int totalPrimitives = triangles.numPrimitives + spheres.numPrimitives;
+    // int totalPrimitives = triangles.numPrimitives + spheres.numPrimitives;
     int nearestPrimitiveIndex = -1;
     PrimitiveType nearestType = PrimitiveType::none;
     
@@ -60,27 +60,60 @@ Color Raytracer::castRay(const Ray ray, const Vector3<double> lookDirection, int
         return Light::backgroundColor;
     }
 
-    int totalLights = lights.size();
+    // int totalLights = lights.size();
 
     Color color = Color();
     // double lCont = 0;
 
-    for (int i = 0; i < totalLights; i++) {
-        bool bInShadow = castShadowRay(Ray(nearestPoint, lights[i]->getDirectionToLight()), nearestPrimitiveIndex, nearestType);
+    for (int i = 0; i < directionalLights.numLights; i++) {
+        bool bInShadow = castShadowRay(Ray(nearestPoint, directionalLights.getDirectionToLight(i)), nearestPrimitiveIndex, nearestType);
 
         if (bInShadow) { continue; }
 
         Color temp;
         if (nearestType == PrimitiveType::sphere) {
-            temp = spheres.getColor(nearestPrimitiveIndex, nearestPoint, lookDirection, lights[i], bInShadow);
+            temp = spheres.getColor(nearestPrimitiveIndex, nearestPoint, lookDirection, directionalLights.getDirectionToLight(i), directionalLights.getLightColor(i), bInShadow);
         }
         else {
-            temp = triangles.getColor(nearestPrimitiveIndex, nearestPoint, lookDirection, lights[i], bInShadow);
+            temp = triangles.getColor(nearestPrimitiveIndex, nearestPoint, lookDirection, directionalLights.getDirectionToLight(i), directionalLights.getLightColor(i), bInShadow);
         }
         color += temp;
         // lCont += 1;
     }
+
+    for (int i = 0; i < pointLights.numLights; i++) {
+        bool bInShadow = castShadowRay(Ray(nearestPoint, pointLights.getDirectionToLight(i, nearestPoint)), nearestPrimitiveIndex, nearestType);
+
+        if (bInShadow) { continue; }
+
+        Color temp;
+        if (nearestType == PrimitiveType::sphere) {
+            temp = spheres.getColor(nearestPrimitiveIndex, nearestPoint, lookDirection, pointLights.getDirectionToLight(i, nearestPoint), pointLights.getLightColor(i, nearestPoint), bInShadow);
+        }
+        else {
+            temp = triangles.getColor(nearestPrimitiveIndex, nearestPoint, lookDirection, pointLights.getDirectionToLight(i, nearestPoint), pointLights.getLightColor(i, nearestPoint), bInShadow);
+        }
+        color += temp;
+        // lCont += 1;
+    }
+
     // color = lCont != 0 ? color / lCont : color;
+
+    // for (int i = 0; i < totalLights; i++) {
+    //     bool bInShadow = castShadowRay(Ray(nearestPoint, lights[i]->getDirectionToLight()), nearestPrimitiveIndex, nearestType);
+
+    //     if (bInShadow) { continue; }
+
+    //     Color temp;
+    //     if (nearestType == PrimitiveType::sphere) {
+    //         temp = spheres.getColor(nearestPrimitiveIndex, nearestPoint, lookDirection, lights[i], bInShadow);
+    //     }
+    //     else {
+    //         temp = triangles.getColor(nearestPrimitiveIndex, nearestPoint, lookDirection, lights[i], bInShadow);
+    //     }
+    //     color += temp;
+    // }
+    
 
     double reflectiveness = 
         nearestType == PrimitiveType::sphere ?

@@ -7,9 +7,9 @@
 
 
 #include "../primitives/primitives.h"
-#include "../lights/light.h"
-#include "../lights/pointLight.h"
-#include "../lights/directionalLight.h"
+#include "../lights/lights.h"
+// #include "../lights/pointLight.h"
+// #include "../lights/directionalLight.h"
 #include "../camera.h"
 
 
@@ -58,8 +58,7 @@ public:
         return Camera(lookAt, lookFrom, lookUp, width, height, fov);
     }
 
-    static void parseLights(std::vector<Light*>& lights, const std::string& filename) {
-        // Read the JSON file
+    static void parseLights(DirectionalLights& directionalLights, PointLights& pointLights, const std::string& filename) {
         std::ifstream configFile(filename);
         if (!configFile.is_open()) {
             throw std::runtime_error("Could not open config file: " + filename);
@@ -77,15 +76,16 @@ public:
             throw std::runtime_error("Config file must contain a 'lights' array");
         }
 
+        std::vector<nlohmann::basic_json<>> pointLightJsons;
+        std::vector<nlohmann::basic_json<>> directionalLightJsons;
+
         for (const auto& lightJson : config["lights"]) {
             try {
                 if (lightJson.contains("type") && lightJson["type"] == "DirectionalLight") {
-                    DirectionalLight* directionalLight = parseDirectionalLight(lightJson);
-                    lights.push_back(directionalLight);
+                    directionalLightJsons.push_back(lightJson);
                 }
                 else if (lightJson.contains("type") && lightJson["type"] == "PointLight") {
-                    PointLight* pointLight = parsePointLight(lightJson);
-                    lights.push_back(pointLight);
+                    pointLightJsons.push_back(lightJson);
                 }
                 else {
                     throw std::runtime_error("Unknown light type: " + std::string(lightJson.value("type", "")));
@@ -95,6 +95,16 @@ public:
                                         //  std::to_string(primitiveJson.position()) + ": " +
                                          std::string(e.what()));
             }
+        }
+
+        directionalLights.initializeVectors(directionalLightJsons.size());
+        for (int i = 0; i < directionalLightJsons.size(); i++) {
+            parseDirectionalLight(i, directionalLights, directionalLightJsons[i]);    
+        }
+
+        pointLights.initializeVectors(pointLightJsons.size());
+        for (int i = 0; i < pointLightJsons.size(); i++) {
+            parsePointLight(i, pointLights, pointLightJsons[i]);
         }
 
         if (config.contains("ambientLight")) {
@@ -109,7 +119,61 @@ public:
                 config["backgroundColor"][1].get<double>(),
                 config["backgroundColor"][2].get<double>());
         }
-    }
+    };
+
+
+    // static void parseLights(std::vector<Light*>& lights, const std::string& filename) {
+    //     // Read the JSON file
+    //     std::ifstream configFile(filename);
+    //     if (!configFile.is_open()) {
+    //         throw std::runtime_error("Could not open config file: " + filename);
+    //     }
+
+    //     Json config;
+    //     try {
+    //         config = Json::parse(configFile, nullptr, true, true);
+    //     } catch (const Json::exception& e) {
+    //         throw std::runtime_error("Invalid JSON in config file: " + std::string(e.what()));
+    //     }
+
+    //     // Validate the root structure
+    //     if (!config.is_object() || !config.contains("lights")) {
+    //         throw std::runtime_error("Config file must contain a 'lights' array");
+    //     }
+
+    //     for (const auto& lightJson : config["lights"]) {
+    //         try {
+    //             if (lightJson.contains("type") && lightJson["type"] == "DirectionalLight") {
+    //                 DirectionalLight* directionalLight = parseDirectionalLight(lightJson);
+    //                 lights.push_back(directionalLight);
+    //             }
+    //             else if (lightJson.contains("type") && lightJson["type"] == "PointLight") {
+    //                 PointLight* pointLight = parsePointLight(lightJson);
+    //                 lights.push_back(pointLight);
+    //             }
+    //             else {
+    //                 throw std::runtime_error("Unknown light type: " + std::string(lightJson.value("type", "")));
+    //             }
+    //         } catch (const Json::exception& e) {
+    //             throw std::runtime_error("Error parsing light " +
+    //                                     //  std::to_string(primitiveJson.position()) + ": " +
+    //                                      std::string(e.what()));
+    //         }
+    //     }
+
+    //     if (config.contains("ambientLight")) {
+    //         Light::ambientLight = Color(
+    //             config["ambientLight"][0].get<double>(),
+    //             config["ambientLight"][1].get<double>(),
+    //             config["ambientLight"][2].get<double>());
+    //     }
+    //     if (config.contains("backgroundColor")) {
+    //         Light::backgroundColor = Color(
+    //             config["backgroundColor"][0].get<double>(),
+    //             config["backgroundColor"][1].get<double>(),
+    //             config["backgroundColor"][2].get<double>());
+    //     }
+    // }
 
     static void parsePrimitives(Triangles& triangles, Spheres& spheres, const std::string& filename) {
         // Read the JSON file
@@ -135,16 +199,10 @@ public:
 
         for (const auto& primitiveJson : config["primitives"]) {
             if (primitiveJson.contains("type") && primitiveJson["type"] == "Sphere") {
-                // sphereCount++;
                 sphereJsons.push_back(primitiveJson);
-                // Sphere* sphere = parseSphere(primitiveJson);
-                // primitives.push_back(sphere);
             }
             else if (primitiveJson.contains("type") && primitiveJson["type"] == "Triangle") {
-                // triangleCount++;
                 triangleJsons.push_back(primitiveJson);
-                // Triangle* tri = parseTriangle(primitiveJson);
-                // primitives.push_back(tri);
             }
             else {
                 throw std::runtime_error("Unknown primitive type: " + std::string(primitiveJson.value("type", "")));
@@ -278,7 +336,7 @@ private:
 
     }
 
-    static PointLight* parsePointLight(const Json& json) {
+    static void parsePointLight(const int i, PointLights& pointLights, const Json& json) {
         Point location = Point(
             json["location"][0].get<double>(),
             json["location"][1].get<double>(),
@@ -291,12 +349,13 @@ private:
         if(json.contains("intensity")) {
             intensity = json["intensity"].get<double>();
         }
+        pointLights.setLight(i, location, color, intensity);
 
-        PointLight* light = new PointLight(color, location, intensity);
-        return light;
+        // PointLight* light = new PointLight(color, location, intensity);
+        // return light;
     }
 
-    static DirectionalLight* parseDirectionalLight(const Json& json) {
+    static void parseDirectionalLight(const int i, DirectionalLights& directionalLights, const Json& json) {
 
         Vector3<double> directionToLight = Vector3<double>(
             json["directionToLight"][0].get<double>(),
@@ -306,8 +365,10 @@ private:
             json["color"][0].get<double>(),
             json["color"][1].get<double>(),
             json["color"][2].get<double>());
+
+        directionalLights.setLight(i, directionToLight, color, 1.0);
         
-        DirectionalLight* light = new DirectionalLight(color, directionToLight);
-        return light;
+        // DirectionalLight* light = new DirectionalLight(color, directionToLight);
+        // return light;
     }
 };

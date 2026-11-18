@@ -46,7 +46,7 @@ struct Lights {
     double getLightIntensity(int i) const {
         return lightValues[i * numLightValues + LightValueOffset::lightIntensity];
     }
-    virtual Vector3<double> getDirectionToLight(const int i, const Point from = Point()) const = 0;
+    // virtual Vector3<double> getDirectionToLight(const int i, const Point from = Point()) const = 0;
 
 };
 
@@ -90,7 +90,7 @@ struct PointLights : Lights {
         };
     }
 
-    virtual Vector3<double> getDirectionToLight(int i, const Point from) const override { return normalize(getLightLocation(i) - from); }
+    Vector3<double> getDirectionToLight(int i, const Point from) const { return normalize(getLightLocation(i) - from); }
 
     Color getLightColor(const int i, const Point from) const {
         Vector3<double> dif = from - getLightLocation(i);
