@@ -26,7 +26,7 @@ struct Lights {
     Lights() {};
 
     void initializeVectors(int size) {
-        numLights= size;
+        numLights = size;
         lightValues = std::vector<double>(size * numLightValues);
     }
     void setLightColor(int i, Color lightColor, double intensity) {
@@ -37,11 +37,11 @@ struct Lights {
     }
 
     Color getColor(int i) const { 
-        return {
+        return Color(
             lightValues[i * numLightValues + LightValueOffset::lightR],
             lightValues[i * numLightValues + LightValueOffset::lightG],
             lightValues[i * numLightValues + LightValueOffset::lightB]
-        };
+        );
     }
     double getLightIntensity(int i) const {
         return lightValues[i * numLightValues + LightValueOffset::lightIntensity];
@@ -53,8 +53,6 @@ struct Lights {
 
 #ifndef POINTLIGHTS_H
 #define POINTLIGHTS_H
-
-// using DirectionalLight = Light;
 
 #define numLightLocationValues 3
 enum LightLocationValueOffset {
@@ -82,18 +80,18 @@ struct PointLights : Lights {
     }
 
     Vector3<double> getLightLocation(int i) const {
-        return {
+        return Vector3<double>(
             locations[i * numLightLocationValues + LightLocationValueOffset::locX],
             locations[i * numLightLocationValues + LightLocationValueOffset::locY],
             locations[i * numLightLocationValues + LightLocationValueOffset::locZ]
-        };
+        );
     }
 
     Vector3<double> getDirectionToLight(int i, const Point from) const { return normalize(getLightLocation(i) - from); }
 
     Color getLightColor(const int i, const Point from) const {
         Vector3<double> dif = from - getLightLocation(i);
-        return Lights::getColor(i) * getLightIntensity(i) / dif.lengthSquared();
+        return getColor(i) * getLightIntensity(i) / dif.lengthSquared();
     }
 };
 
@@ -120,6 +118,7 @@ struct DirectionalLights : Lights {
     }
     
     void setLight(int i, Vector3<double> direction, Color lightColor, double intensity) {
+        direction = normalize(direction);
         directionToLights[i * numLightDirectionValues + LightDirectionValueOffset::dirX] = direction.x();
         directionToLights[i * numLightDirectionValues + LightDirectionValueOffset::dirY] = direction.y();
         directionToLights[i * numLightDirectionValues + LightDirectionValueOffset::dirZ] = direction.z();
@@ -127,15 +126,15 @@ struct DirectionalLights : Lights {
     }
 
     Vector3<double> getDirectionToLight(int i) const { 
-        return {
+        return Vector3<double>(
             directionToLights[i * numLightDirectionValues + LightDirectionValueOffset::dirX],
             directionToLights[i * numLightDirectionValues + LightDirectionValueOffset::dirY],
             directionToLights[i * numLightDirectionValues + LightDirectionValueOffset::dirZ]
-        };
+        );
     }
 
     Color getLightColor(const int i) const {
-        return Lights::getColor(i);
+        return getColor(i);
     }
 };
 
