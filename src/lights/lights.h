@@ -134,7 +134,7 @@ struct DirectionalLights : Lights {
     }
 
     Color getLightColor(const int i) const {
-        return getColor(i);
+        return getColor(i) * getLightIntensity(i);
     }
 };
 
